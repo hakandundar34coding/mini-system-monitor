@@ -46,10 +46,6 @@
 - `python3 (>=3.6), python3-cairo, python3-tk`
 
 
-### Updating:
-- Mini System Monitor can be updated from Flatpak.
-
-
 ### Screenshots:
 ![Mini System Monitor](screenshots/mini-system-monitor-screenshot1.png)
 
