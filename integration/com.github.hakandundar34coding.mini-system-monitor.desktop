@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Mini System Monitor
+GenericName=System Monitor
+Comment=Mini system monitor.
+Exec=mini-system-monitor
+Icon=mini-system-monitor
+Terminal=false
+Type=Application
+Categories=System;
+StartupNotify=true
+Keywords=system monitor;task manager;performance;cpu;ram;swap;memory;disk;network;
+
