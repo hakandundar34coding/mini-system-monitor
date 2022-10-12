@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 from setuptools import setup, find_packages, os
 import sys
 
@@ -21,6 +22,7 @@ if "--flatpak" in sys.argv:
 
 
 if PREFIX == "/app":
+
     os.rename("icons/mini-system-monitor.svg", "icons/apps/com.github.hakandundar34coding.mini-system-monitor.svg")
 
     with open("integration/com.github.hakandundar34coding.mini-system-monitor.desktop") as reader:
@@ -45,6 +47,27 @@ if PREFIX == "/app":
     ]
 
 
+if PREFIX != "/app":
+
+    os.chmod("integration/com.github.hakandundar34coding.mini-system-monitor.desktop", 0o644)
+    for file in files_in_folder("src/"):
+        os.chmod(file, 0o644)
+    for file in files_in_folder("icons/"):
+        os.chmod(file, 0o644)
+    os.chmod("icons/mini-system-monitor.svg", 0o644)
+    os.chmod("icons/mini-system-monitor.png", 0o644)
+    os.chmod("images/smc_screenshot1.png", 0o644)
+
+    data_files = [
+        ("/usr/share/applications/", ["integration/com.github.hakandundar34coding.mini-system-monitor.desktop"]),
+        ("/usr/share/mini-system-monitor/src/", files_in_folder("src/")),
+        ("/usr/share/icons/hicolor/scalable/apps/", ["icons/mini-system-monitor.svg"]),
+        ("/usr/share/mini-system-monitor/icons/", ["icons/mini-system-monitor.png"]),
+        ("/usr/share/mini-system-monitor/images/", ["images/smc_screenshot1.png"]),
+        ("/usr/bin/", ["integration/mini-system-monitor"])
+    ]
+
+
 setup(
     name="mini-system-monitor",
     version=version,
@@ -55,7 +78,6 @@ setup(
     url="https://github.com/hakandundar34coding/mini-system-monitor",
     keywords="system monitor task manager performance cpu ram swap memory disk network",
     license="GPLv3",
-    install_requires=["PyGObject"],
     python_requires=">=3.6",
     packages=find_packages(),
     data_files=data_files,

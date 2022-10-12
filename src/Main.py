@@ -377,7 +377,7 @@ class AboutWindow():
 
 
 
-if __name__ == "__main__":
-    # Run class
-    MainWindow()
+#if __name__ == "__main__":
+# Run class
+MainWindow()
 
