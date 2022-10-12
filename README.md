@@ -1,6 +1,14 @@
 # Mini System Monitor
 
-Mini version of 'System Monitoring Center'.
+<p align="center">
+    <img src="https://github.com/hakandundar34coding/mini-system-monitor/blob/master/icons/mini-system-monitor.svg" alt="ss" width="100">
+</p>
+
+<p align="center">
+    <strong>
+        Mini version of 'System Monitoring Center'.
+    </strong>
+</p>
 
 
 <p align="center">
@@ -32,5 +40,5 @@ Mini version of 'System Monitoring Center'.
 
 
 ### Screenshots:
-![Mini System Monitor](screenshots/smc_screenshot1.png)
+![Mini System Monitor](screenshots/mini-system-monitor-screenshot1.png)
 
