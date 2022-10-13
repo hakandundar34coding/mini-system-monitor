@@ -39,8 +39,8 @@ if PREFIX == "/app":
 
     data_files = [
         ("/app/share/applications/", ["integration/com.github.hakandundar34coding.mini-system-monitor.desktop"]),
-        ("/app/share/mini-system-monitor/src/", files_in_folder("src/")),
         ("/app/share/icons/hicolor/scalable/apps/", ["icons/com.github.hakandundar34coding.mini-system-monitor.svg"]),
+        ("/app/share/mini-system-monitor/src/", files_in_folder("src/")),
         ("/app/share/mini-system-monitor/icons/", ["icons/mini-system-monitor.png"]),
         ("/app/share/mini-system-monitor/images/", ["images/smc_screenshot1.png"]),
         ("/app/bin/", ["integration/mini-system-monitor"])
@@ -60,8 +60,8 @@ if PREFIX != "/app":
 
     data_files = [
         ("/usr/share/applications/", ["integration/com.github.hakandundar34coding.mini-system-monitor.desktop"]),
-        ("/usr/share/mini-system-monitor/src/", files_in_folder("src/")),
         ("/usr/share/icons/hicolor/scalable/apps/", ["icons/mini-system-monitor.svg"]),
+        ("/usr/share/mini-system-monitor/src/", files_in_folder("src/")),
         ("/usr/share/mini-system-monitor/icons/", ["icons/mini-system-monitor.png"]),
         ("/usr/share/mini-system-monitor/images/", ["images/smc_screenshot1.png"]),
         ("/usr/bin/", ["integration/mini-system-monitor"])
