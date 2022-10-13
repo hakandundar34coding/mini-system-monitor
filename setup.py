@@ -23,7 +23,7 @@ if "--flatpak" in sys.argv:
 
 if PREFIX == "/app":
 
-    os.rename("icons/mini-system-monitor.svg", "icons/apps/com.github.hakandundar34coding.mini-system-monitor.svg")
+    os.rename("icons/mini-system-monitor.svg", "icons/com.github.hakandundar34coding.mini-system-monitor.svg")
 
     with open("integration/com.github.hakandundar34coding.mini-system-monitor.desktop") as reader:
         desktop_file_content = reader.read()

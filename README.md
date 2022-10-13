@@ -33,7 +33,6 @@
 
 ### Features:
 - Monitoring CPU, RAM, Disk, Network usage
-- Optimized for low CPU usage and fast start
 - Supports ARM architecture
 - Free and open source
 
