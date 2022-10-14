@@ -7,13 +7,12 @@
   <name>Mini System Monitor</name>
   <project_license>GPL-3.0</project_license>
   <summary>Provides information about CPU, RAM, Disk, Network performance.</summary>
-  <url type="https://github.com/hakandundar34coding/mini-system-monitor</url>
+  <url type="homepage">https://github.com/hakandundar34coding/mini-system-monitor</url>
   <description>
     <p>Mini version of 'System Monitoring Center'.</p>
     <p>Features:</p>
     <ul>
       <li>Monitoring CPU, RAM, Disk, Network usage</li>
-      <li>Optimized for low CPU usage and fast start</li>
       <li>Supports ARM architecture</li>
       <li>Free and open source</li>
     </ul>

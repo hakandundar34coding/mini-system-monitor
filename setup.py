@@ -33,7 +33,7 @@ if PREFIX == "/app":
 
     with open("integration/mini-system-monitor") as reader:
         script_file_content = reader.read()
-    script_file_content = script_file_content.replace("/usr", "/app")
+    script_file_content = script_file_content.replace("/usr/share/mini-system-monitor/src/", "/app/share/mini-system-monitor/src/")
     with open("integration/mini-system-monitor", "w") as writer:
         writer.write(script_file_content)
 
