@@ -33,7 +33,6 @@
 
 ### Features:
 - Monitoring CPU, RAM, Disk, Network usage
-- Supports ARM architecture
 - Free and open source
 
 
@@ -42,7 +41,7 @@
 
 
 ### Dependencies:
-- `python3 (>=3.6), python3-cairo, python3-tk`
+- `python3 (>=3.6), python3-cairo, python3-tk, python3-pil`
 
 
 ### Screenshots:

@@ -13,7 +13,6 @@
     <p>Features:</p>
     <ul>
       <li>Monitoring CPU, RAM, Disk, Network usage</li>
-      <li>Supports ARM architecture</li>
       <li>Free and open source</li>
     </ul>
   </description>
@@ -24,6 +23,11 @@
   </screenshots>
   <releases>
     <release version="1.0.0" date="2022-10-12"></release>
+      <description>
+        <p>
+          Initial commit
+        </p>
+      </description>
   </releases>
   <content_rating type="oars-1.1"/>
 </component>
