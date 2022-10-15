@@ -43,8 +43,8 @@ if PREFIX == "/app":
         ("/app/share/mini-system-monitor/src/", files_in_folder("src/")),
         ("/app/share/mini-system-monitor/icons/", ["icons/mini-system-monitor.png"]),
         ("/app/share/mini-system-monitor/images/", ["images/smc_screenshot1.png"]),
-        ("/app/bin/", ["integration/mini-system-monitor"])
         ("/app/share/appdata/", ["com.github.hakandundar34coding.mini-system-monitor.appdata.xml"]),
+        ("/app/bin/", ["integration/mini-system-monitor"])
     ]
 
 
