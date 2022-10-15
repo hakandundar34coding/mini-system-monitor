@@ -23,12 +23,13 @@ if "--flatpak" in sys.argv:
 
 if PREFIX == "/app":
 
-    os.rename("icons/mini-system-monitor.svg", "icons/com.github.hakandundar34coding.mini-system-monitor.svg")
+    os.rename("icons/mini-system-monitor.svg", "icons/io.github.hakandundar34coding.mini-system-monitor.svg")
+    os.rename("integration/com.github.hakandundar34coding.mini-system-monitor.desktop", "integration/io.github.hakandundar34coding.mini-system-monitor.desktop")
 
-    with open("integration/com.github.hakandundar34coding.mini-system-monitor.desktop") as reader:
+    with open("integration/io.github.hakandundar34coding.mini-system-monitor.desktop") as reader:
         desktop_file_content = reader.read()
-    desktop_file_content = desktop_file_content.replace("Icon=mini-system-monitor", "Icon=com.github.hakandundar34coding.mini-system-monitor")
-    with open("integration/com.github.hakandundar34coding.mini-system-monitor.desktop", "w") as writer:
+    desktop_file_content = desktop_file_content.replace("Icon=mini-system-monitor", "Icon=io.github.hakandundar34coding.mini-system-monitor")
+    with open("integration/io.github.hakandundar34coding.mini-system-monitor.desktop", "w") as writer:
         writer.write(desktop_file_content)
 
     with open("integration/mini-system-monitor") as reader:
@@ -38,12 +39,12 @@ if PREFIX == "/app":
         writer.write(script_file_content)
 
     data_files = [
-        ("/app/share/applications/", ["integration/com.github.hakandundar34coding.mini-system-monitor.desktop"]),
-        ("/app/share/icons/hicolor/scalable/apps/", ["icons/com.github.hakandundar34coding.mini-system-monitor.svg"]),
+        ("/app/share/applications/", ["integration/io.github.hakandundar34coding.mini-system-monitor.desktop"]),
+        ("/app/share/icons/hicolor/scalable/apps/", ["icons/io.github.hakandundar34coding.mini-system-monitor.svg"]),
         ("/app/share/mini-system-monitor/src/", files_in_folder("src/")),
         ("/app/share/mini-system-monitor/icons/", ["icons/mini-system-monitor.png"]),
         ("/app/share/mini-system-monitor/images/", ["images/smc_screenshot1.png"]),
-        ("/app/share/appdata/", ["com.github.hakandundar34coding.mini-system-monitor.appdata.xml"]),
+        ("/app/share/appdata/", ["io.github.hakandundar34coding.mini-system-monitor.appdata.xml"]),
         ("/app/bin/", ["integration/mini-system-monitor"])
     ]
 
