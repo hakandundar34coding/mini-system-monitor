@@ -10,9 +10,13 @@ class Config:
     # ----------------------- Always called when object is generated -----------------------
     def __init__(self):
 
-        # Define configration file and directory
-        self.current_user_homedir = os.environ.get('HOME')
-        self.config_folder_path = self.current_user_homedir + "/.config/mini-system-monitor/"
+        # Define configration file and directory. "XDG_CONFIG_HOME" is used by Flatpak but this environment variable may not be defined on several distributions.
+        current_user_configdir = os.environ.get('XDG_CONFIG_HOME')
+        if current_user_configdir == None or current_user_configdir == "":
+            current_user_homedir = os.environ.get('HOME')
+            self.config_folder_path = current_user_homedir + "/.config/mini-system-monitor/"
+        else:
+            self.config_folder_path = current_user_configdir + "/mini-system-monitor/"
         self.config_file_path = self.config_folder_path + "config.txt"
 
         # Read settings

@@ -313,7 +313,7 @@ class Performance:
     # ----------------------- Called for drawing performance summary data -----------------------
     def performance_summary_chart_draw_func(self):
 
-        # Get widgets from MainWİndow.
+        # Get widgets from MainWindow.
         widget = self.MainWindow.label1
         ctx = self.MainWindow.context1
         surface1 = self.MainWindow.surface1
