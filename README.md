@@ -14,19 +14,19 @@
 
 
 <p align="center">
-<a href="https://github.com/hakandundar34coding/mini-system-monitor/tags"><img alt="Platform (GNU/Linux)" src="https://img.shields.io/badge/platform-GNU/Linux-blue.svg"/></a>
+<a href="https://flathub.org/apps/details/io.github.hakandundar34coding.mini-system-monitor"><img alt="Platform (GNU/Linux)" src="https://img.shields.io/badge/platform-GNU/Linux-blue.svg"/></a>
 <a href="https://github.com/hakandundar34coding/mini-system-monitor/tags"><img alt="GitHub tag (latest by date)" src="https://img.shields.io/github/v/tag/hakandundar34coding/mini-system-monitor"></a>
-<a href="https://github.com/hakandundar34coding/mini-system-monitor/tags"><img alt="Flathub" src="https://img.shields.io/flathub/downloads/io.github.hakandundar34coding.mini-system-monitor"></a>
+<a href="https://flathub.org/apps/details/io.github.hakandundar34coding.mini-system-monitor"><img alt="Flathub" src="https://img.shields.io/flathub/downloads/io.github.hakandundar34coding.mini-system-monitor"></a>
 <a href="https://github.com/hakandundar34coding/mini-system-monitor/blob/master/Changes.md"><img src="https://img.shields.io/badge/View-Changelog-b37840"></a>
 </p>
 
 <p align="center">
     </a>
     <a href="https://github.com/hakandundar34coding/mini-system-monitor/tags">
-        <img src="https://img.shields.io/badge/Code-Python3-523232">
+        <img src="https://img.shields.io/badge/Code-Python3-52a381">
     </a>
     <a href="https://github.com/hakandundar34coding/mini-system-monitor/tags">
-        <img src="https://img.shields.io/badge/GUI-Tkinter-523232">
+        <img src="https://img.shields.io/badge/GUI-Tkinter-52a381">
     </a>
 </p>
 
