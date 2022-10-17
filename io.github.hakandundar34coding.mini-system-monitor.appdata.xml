@@ -23,12 +23,20 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release version="1.0.0" date="2022-10-16"></release>
+    <release version="1.1.0" date="2022-10-17">
+      <description>
+        <p>
+          Several simplifications (Code, GUI, etc.)
+        </p>
+      </description>
+    </release>
+    <release version="1.0.0" date="2022-10-16">
       <description>
         <p>
           Initial commit
         </p>
       </description>
+    </release>
   </releases>
   <content_rating type="oars-1.1"/>
 </component>
