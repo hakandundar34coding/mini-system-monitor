@@ -1581,14 +1581,9 @@ class Performance:
         with open("/proc/uptime") as reader:
             sut_read = float(reader.read().split(" ")[0].strip())
 
-        sut_days = sut_read/60/60/24
-        sut_days_int = int(sut_days)
-        sut_hours = (sut_days -sut_days_int) * 24
-        sut_hours_int = int(sut_hours)
-        sut_minutes = (sut_hours - sut_hours_int) * 60
-        sut_minutes_int = int(sut_minutes)
-        sut_seconds = (sut_minutes - sut_minutes_int) * 60
-        sut_seconds_int = int(sut_seconds)
+        sut_hours_int = int(sut_read/60/60)
+        sut_minutes_int = int(sut_read/60)
+        sut_minutes_int = sut_minutes_int - (sut_hours_int*60)
 
         #system_up_time = f'{sut_days_int:02}:{sut_hours_int:02}:{sut_minutes_int:02}:{sut_seconds_int:02}'
         system_up_time = f'{sut_hours_int:02}:{sut_minutes_int:02}'

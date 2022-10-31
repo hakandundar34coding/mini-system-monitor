@@ -1,7 +1,5 @@
 # Mini System Monitor
 
-# Work In Progress
-
 <p align="center">
     <img src="https://github.com/hakandundar34coding/mini-system-monitor/blob/master/icons/mini-system-monitor.svg" alt="ss" width="100">
 </p>

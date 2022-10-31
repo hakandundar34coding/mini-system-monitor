@@ -23,6 +23,13 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.1.1" date="2022-10-31">
+      <description>
+        <p>
+          Improved: System up time for long times
+        </p>
+      </description>
+    </release>
     <release version="1.1.0" date="2022-10-17">
       <description>
         <p>
