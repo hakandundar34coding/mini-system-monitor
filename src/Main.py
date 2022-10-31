@@ -1585,7 +1585,6 @@ class Performance:
         sut_minutes_int = int(sut_read/60)
         sut_minutes_int = sut_minutes_int - (sut_hours_int*60)
 
-        #system_up_time = f'{sut_days_int:02}:{sut_hours_int:02}:{sut_minutes_int:02}:{sut_seconds_int:02}'
         system_up_time = f'{sut_hours_int:02}:{sut_minutes_int:02}'
 
         return system_up_time
