@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-# Import modules
 import tkinter as tk
 from tkinter import ttk
 
@@ -17,28 +16,26 @@ import os
 import sys
 
 
-
-# Define class
 class Config:
 
-    # ----------------------- Always called when object is generated -----------------------
     def __init__(self):
 
-        # Get settings
         self.config_default_general_general_func()
 
 
-    # ----------------------- Called for default general settings -----------------------
     def config_default_general_general_func(self):
+        """
+        Get settings.
+        """
 
-        self.remember_last_selected_hardware = 0
         self.selected_disk = ""
         self.selected_network_card = ""
 
         # Read-only settings.
+        self.remember_last_selected_hardware = 0
         self.update_interval = 0.75
         self.chart_data_history = 5
-        self.remember_window_size = "550x430"
+        self.remember_window_size = "530x420"
         self.chart_line_color_cpu_percent = [0.29, 0.78, 0.0, 1.0]
         self.selected_cpu_core = ""
         self.chart_line_color_memory_percent = [0.27, 0.49, 1.0, 1.0]
@@ -54,114 +51,123 @@ class Config:
         self.performance_network_speed_bit = 0
 
 
-
-# Define class
 class MainWindow:
 
-    # ----------------------- Always called when object is generated -----------------------
     def __init__(self):
 
         # Read settings
         global Config
         Config = Config()
 
-        # Generate main window and configure it
+        # Main window
         self.main_window = tk.Tk()
         self.main_window.geometry(Config.remember_window_size)
         # Disable window sizing in x and y directions.
         self.main_window.resizable(False, False)
         self.main_window.title("Mini System Monitor")
         self.application_icon = tk.PhotoImage(file=os.path.dirname(os.path.realpath(__file__)) + "/../icons/mini-system-monitor.png")
-        # "True" is used in order to use same wimdow icon for other windows of the application.
+        # "True" is used in order to use same window icon for other windows of the application.
         self.main_window.iconphoto(True, self.application_icon)
         self.main_window.rowconfigure(0, minsize=1, weight=1)
         self.main_window.columnconfigure(0, minsize=1, weight=1)
 
-        # Define main window GUI objects
+        # Main window GUI objects
         self.main_window_gui_objects()
 
-        # Configuration for running function after window is shown
+        # Run function after window is shown
         self.main_window.after_idle(self.main_window_show_func)
 
-        # Configuration for detecting if window close button (X) is clicked
+        # Run function if window close button (X) is clicked
         self.main_window.protocol('WM_DELETE_WINDOW', self.main_window_close_button_func)
 
         # Start main loop for keeping the window on the screen.
         self.main_window.mainloop()
 
 
-    # ----------------------- Called by "__init__" function for generating and configuring main window GUI objects -----------------------
     def main_window_gui_objects(self):
+        """
+        Main window GUI objects
+        """
 
-        # Generate a frame (which will contain sub-frames on the main window) and configure it.
+        # Main Frame
         frame_main = tk.Frame(self.main_window)
         frame_main.rowconfigure(1, minsize=1, weight=1)
         frame_main.columnconfigure(0, minsize=1, weight=1)
         frame_main.grid(row=0, column=0, sticky="nsew", padx=0, pady=0)
 
-        # Generate a frame (which will contain buttons) and configure it.
+        # Frame (buttons)
         frame_buttons = tk.Frame(frame_main)
         frame_buttons.rowconfigure(0, minsize=1, weight=1)
         frame_buttons.columnconfigure(1, minsize=1, weight=1)
         frame_buttons.grid(row=0, column=0, sticky="nsew", padx=0, pady=0)
 
-        # Genreate "More..." button and configure it.
+        # Button (More...)
         self.button1 = tk.Button(frame_buttons, text="More...", width=5, height=1, command=self.more_button_func)
         self.button1.grid(row=0, column=0, sticky="ew")
 
-        # Genreate "Settings" button and configure it.
+        # Button (Settings)
         self.button2 = tk.Button(frame_buttons, text="Settings", width=5, height=1, command=self.settings_button_func)
         self.button2.grid(row=0, column=1, sticky="ew")
 
-        # Genreate "About" button.
+        # Button (About)
         self.button3 = tk.Button(frame_buttons, text="About", width=5, height=1, command=self.about_button_func)
         self.button3.grid(row=0, column=2, sticky="ew")
 
-        # Genreate a label for showing graphics on it.
+        # Label (for showing graphics)
         self.label1 = tk.Label(frame_main)
         self.label1.grid(row=1, column=0, sticky="nsew")
 
-        # Define a surface for showing Cairo context on it.
+        # Surface (for showing Cairo context)
         window_size = Config.remember_window_size.split("x")
         self.surface1 = ImageSurface(FORMAT_ARGB32, int(window_size[0]), int(window_size[1]))
-        # Define a Cairo context for drawing graphics.
+        # Cairo Context (for drawing graphics)
         self.context1 = Context(self.surface1)
         # Update label for showing graphics faster on start.
         self.label1.update()
 
 
-    # ----------------------- Called for showing More... window -----------------------
     def more_button_func(self):
+        """
+        Show "More..." window.
+        """
 
         self.more_window = MoreWindow(self.main_window)
 
 
-    # ----------------------- Called for showing Settings window -----------------------
     def settings_button_func(self):
+        """
+        Show "Settings" window.
+        """
 
         self.settings_window = SettingsWindow(self.main_window)
 
 
-    # ----------------------- Called for showing About window -----------------------
     def about_button_func(self):
+        """
+        Show "About" window.
+        """
 
         self.about_window = AboutWindow(self.main_window, self.application_icon)
 
 
-    # ----------------------- Called for running code after main window is shown -----------------------
     def main_window_show_func(self):
+        """
+        Run code after the main window is shown.
+        """
 
         # Run "Performance" module in order to provide performance data to Performance tab.
         global Performance
         Performance = Performance(self)
         Performance.performance_background_initial_func()
 
-        # Start loop function to run loop functions of opened tabs to get data of them.
+        # Start loop function
         self.main_gui_tab_loop_func()
 
 
-    # ----------------------- Called for detecting clicks on the window close button (X) and exiting the application -----------------------
     def main_window_close_button_func(self):
+        """
+        Detect clicks on the window close button (X) and exit the application.
+        """
 
         # Save current size of the main window.
         main_window_size_and_position = self.main_window.geometry()
@@ -172,8 +178,10 @@ class MainWindow:
         sys.exit()
 
 
-    # ----------------------- Called for running loop functions of opened tabs to get data -----------------------
     def main_gui_tab_loop_func(self):
+        """
+        Repeat running the functions.
+        """
 
         Performance.performance_background_loop_func()
 
@@ -183,37 +191,35 @@ class MainWindow:
         self.main_window.after(int(Config.update_interval*1000), self.main_gui_tab_loop_func)
 
 
-
-# Define class
 class MoreWindow():
 
-    # ----------------------- Always called when MoreWindow class is generated -----------------------
     def __init__(self, main_window):
 
-        # Get main window of the application.
         self.main_window = main_window
 
-        # Generate a window and configure it.
+        # Window (More...)
         self.window2001 = tk.Toplevel(self.main_window)
         self.window2001.wm_transient(self.main_window)                                        # "wm_transient()" is used in order to keep the about window on top of the main window.
         self.window2001.grab_set()                                                            # "grab_set()" is used in order to prevent usage of the main window.
         self.window2001.resizable(False, False)                                               # Disable window sizing in x and y directions.
         self.window2001.title("More...")
 
-        # Define Settings window GUI objects
+        # "More..." window GUI objects
         self.more_window_gui_objects()
 
 
-    # ----------------------- Called by "__init__" function for generating and configuring window GUI objects -----------------------
     def more_window_gui_objects(self):
+        """
+        More window GUI objects
+        """
 
-        # Generate a frame and configure it.
+        # Main Frame
         frame_main2001 = tk.Frame(self.window2001)
         frame_main2001.rowconfigure(0, minsize=1, weight=1)
         frame_main2001.columnconfigure(0, minsize=1, weight=1)
         frame_main2001.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
-        # Generate labels and set texts for showing application information.
+        # Labels
         label2001 = tk.Label(frame_main2001, text="See free and open source 'System Monitoring Center' for more features.")
         label2001.grid(row=0, column=0, sticky="ns", padx=0, pady=0)
 
@@ -221,55 +227,55 @@ class MoreWindow():
         label2002.grid(row=1, column=0, sticky="ns", padx=0, pady=0)
         label2002.bind("<Button-1>", self.more_window_web_page_link_func)
 
-        # Generate a label and set an image.
+        # Label (for showing image)
         self.image2001 = tk.PhotoImage(file=os.path.dirname(os.path.realpath(__file__)) + "/../images/smc_screenshot1.png")
         label2001 = tk.Label(frame_main2001, image=self.image2001)
         label2001.grid(row=2, column=0, sticky="ns", padx=0, pady=0)
 
 
-    # ----------------------- Called for opening project web page when relevant label is clicked -----------------------
     def more_window_web_page_link_func(self, event):
+        """
+        Open the link in a web browser.
+        """
 
         webbrowser.open_new("https://github.com/hakandundar34coding/system-monitoring-center")
 
 
-
-# Define class
 class SettingsWindow():
 
-    # ----------------------- Always called when SettingsWindow class is generated -----------------------
     def __init__(self, main_window):
 
-        # Get main window of the application.
         self.main_window = main_window
 
-        # Generate a window and configure it.
+        # Window (Settings)
         self.window3001 = tk.Toplevel(self.main_window)
         self.window3001.wm_transient(self.main_window)                                        # "wm_transient()" is used in order to keep the about window on top of the main window.
         self.window3001.grab_set()                                                            # "grab_set()" is used in order to prevent usage of the main window.
         self.window3001.resizable(False, False)                                               # Disable window sizing in x and y directions.
         self.window3001.title("Settings")
 
-        # Define Settings window GUI objects
+        # "Settings" window GUI objects
         self.settings_window_gui_objects()
 
 
-    # ----------------------- Called by "__init__" function for generating and configuring window GUI objects -----------------------
     def settings_window_gui_objects(self):
+        """
+        Settings window GUI objects
+        """
 
-        # Generate a frame and configure it.
+        # Main Frame
         frame_main3001 = tk.Frame(self.window3001)
         frame_main3001.rowconfigure(0, minsize=1, weight=1)
         frame_main3001.columnconfigure(0, minsize=1, weight=1)
         frame_main3001.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
-        # Generate labels and set texts for showing application information.
+        # Labels
         label3001 = tk.Label(frame_main3001, text="Disk")
         label3001.grid(row=0, column=0, sticky="w")
         label3002 = tk.Label(frame_main3001, text="Network Card")
         label3002.grid(row=1, column=0, sticky="w")
 
-        # Generate comboboxes and configure it.
+        # Comboboxes
         self.combobox3001_variable = tk.StringVar()
         self.combobox3001 = ttk.Combobox(frame_main3001, textvariable=self.combobox3001_variable)
         self.combobox3001.grid(row=0, column=1, sticky="w", padx=5, pady=2)
@@ -293,16 +299,20 @@ class SettingsWindow():
         self.combobox3001.current(Performance.selected_disk_number)
 
 
-    # ----------------------- Called for selecting disk -----------------------
     def settings_disk_selection_func(self, event):
+        """
+        Select disk.
+        """
 
         selected_device = self.combobox3001.get()
         Config.selected_disk = selected_device
         Performance.performance_set_selected_disk_func()
 
 
-    # ----------------------- Called for selecting network card -----------------------
     def settings_network_card_selection_func(self, event):
+        """
+        Select network card.
+        """
 
         selected_device = self.combobox3002.get()
         Config.selected_network_card = selected_device
@@ -310,47 +320,47 @@ class SettingsWindow():
 
 
 
-# Define class
 class AboutWindow():
 
-    # ----------------------- Always called when SettingsWindow class is generated -----------------------
     def __init__(self, main_window, application_icon):
 
         # Get main window and icon of the application.
         self.main_window = main_window
         self.application_icon = application_icon
 
-        # Generate a window and configure it.
+        # Window (About)
         self.window1001 = tk.Toplevel(self.main_window)
         self.window1001.wm_transient(self.main_window)                                        # "wm_transient()" is used in order to keep the about window on top of the main window.
         self.window1001.grab_set()                                                            # "grab_set()" is used in order to prevent usage of the main window.
         self.window1001.resizable(False, False)                                               # Disable window sizing in x and y directions.
         self.window1001.title("About")
 
-        # Define About window GUI objects
+        # "About" window GUI objects
         self.about_window_gui_objects()
 
 
-    # ----------------------- Called by "__init__" function for generating and configuring window GUI objects -----------------------
     def about_window_gui_objects(self):
+        """
+        Settings window GUI objects
+        """
 
-        # Get software version from file.
+        # Get software version
         try:
             software_version = open(os.path.dirname(os.path.abspath(__file__)) + "/__version__").readline()
         except Exception:
             pass
 
-        # Generate a frame and configure it.
+        # Main Frame
         frame_main1001 = tk.Frame(self.window1001)
         frame_main1001.rowconfigure(0, minsize=1, weight=1)
         frame_main1001.columnconfigure(0, minsize=1, weight=1)
         frame_main1001.grid(row=0, column=0, sticky="nsew", padx=1, pady=1)
 
-        # Generate a image and set application icon.
+        # Image
         label1001 = tk.Label(frame_main1001, image=self.application_icon)
         label1001.grid(row=0, column=0, sticky="ns", padx=10, pady=10)
 
-        # Generate labels and set texts for showing application information.
+        # Labels
         label1002 = tk.Label(frame_main1001, text="Mini System Monitor", font=("bold"))
         label1002.grid(row=1, column=0, sticky="ns", padx=0, pady=0)
 
@@ -375,48 +385,35 @@ class AboutWindow():
         label1007.bind("<Button-1>", self.about_window_license_link_func)
 
 
-    # ----------------------- Called for opening project web page when relevant label is clicked -----------------------
     def about_window_web_page_link_func(self, event):
+        """
+        Open the link in a web browser.
+        """
 
         webbrowser.open_new("https://github.com/hakandundar34coding/mini-system-monitor")
 
 
-    # ----------------------- Called for opening license web page when relevant label is clicked -----------------------
     def about_window_license_link_func(self, event):
+        """
+        Open the link in a web browser.
+        """
 
         webbrowser.open_new("https://www.gnu.org/licenses/gpl-3.0.html")
 
 
-
-# Define class
 class Performance:
 
-    # ----------------------- Always called when object is generated -----------------------
     def __init__(self, MainWindow):
 
         self.performance_define_data_unit_converter_variables_func()
 
-        # Get main window of the application.
         self.MainWindow = MainWindow
 
 
-    # ----------------------------------- Performance - Set Selected CPU Core Function -----------------------------------
-    def performance_set_selected_cpu_core_func(self):
-
-        # Set selected CPU core
-        first_core = self.logical_core_list[0]
-        if Config.selected_cpu_core in self.logical_core_list:
-            selected_cpu_core = Config.selected_cpu_core
-        else:
-            selected_cpu_core = first_core
-        self.selected_cpu_core_number = self.logical_core_list_system_ordered.index(selected_cpu_core)
-
-        # Definition to access to this variable from other modules.
-        self.selected_cpu_core = selected_cpu_core
-
-
-    # ----------------------------------- Performance - Set Selected Disk Function -----------------------------------
     def performance_set_selected_disk_func(self):
+        """
+        Set selected disk.
+        """
 
         # Set selected disk
         with open("/proc/mounts") as reader:
@@ -458,8 +455,10 @@ class Performance:
         self.selected_disk_number = self.disk_list_system_ordered.index(selected_disk)
 
 
-    # ----------------------------------- Performance - Set Selected Network Card Function -----------------------------------
     def performance_set_selected_network_card_func(self):
+        """
+        Set selected network card.
+        """
 
         # Set selected network card
         connected_network_card_list = []
@@ -485,8 +484,10 @@ class Performance:
         self.selected_network_card_number = selected_network_card_number
 
 
-    # ----------------------------------- Performance - Background Initial Function -----------------------------------
     def performance_background_initial_func(self):
+        """
+        Performance initial function.
+        """
 
         self.chart_data_history = Config.chart_data_history
 
@@ -524,8 +525,11 @@ class Performance:
             Config.selected_network_card = ""
 
 
-    # ----------------------------------- Performance - Background Function (gets basic CPU, memory, disk and network usage data in the background in order to assure uninterrupted data for charts) -----------------------------------
     def performance_background_loop_func(self):
+        """
+        Performance loop function.
+        Get CPU, memory, disk and network usage data.
+        """
 
         # Definition for lower CPU usage because this variable is used multiple times in this function.
         update_interval = Config.update_interval
@@ -553,7 +557,7 @@ class Performance:
                 del self.cpu_usage_percent_per_core[cpu_core_index_to_remove]
                 self.logical_core_list.remove(cpu_core)
         if logical_core_list_prev != self.logical_core_list:
-            self.performance_set_selected_cpu_core_func()
+            pass
         # Get cpu_usage_percent_per_core, cpu_usage_percent_ave
         cpu_time_all = []
         cpu_time_load = []
@@ -685,8 +689,10 @@ class Performance:
         self.network_send_bytes_prev = list(self.network_send_bytes)
 
 
-    # ----------------------- Called for drawing performance summary data -----------------------
     def performance_summary_chart_draw_func(self):
+        """
+        Draw graphics.
+        """
 
         # Get widgets from MainWindow.
         widget = self.MainWindow.label1
@@ -1575,8 +1581,10 @@ class Performance:
         widget.image = image_ref
 
 
-    # ----------------------- Get system up time (sut) -----------------------
     def cpu_system_up_time_func(self):
+        """
+        Get system up time.
+        """
 
         with open("/proc/uptime") as reader:
             sut_read = float(reader.read().split(" ")[0].strip())
@@ -1590,36 +1598,20 @@ class Performance:
         return system_up_time
 
 
-    # ----------------------- Called for defining values for converting data units and setting value precision (called from several modules) -----------------------
     def performance_define_data_unit_converter_variables_func(self):
-
-        #       ISO UNITs (as powers of 1000)        -             IEC UNITs (as powers of 1024)
-        # Unit Name    Abbreviation     bytes        -       Unit Name    Abbreviation    bytes   
-        # byte         B                1            -       byte         B               1
-        # kilobyte     KB               1000         -       kibibyte     KiB             1024
-        # megabyte     MB               1000^2       -       mebibyte     MiB             1024^2
-        # gigabyte     GB               1000^3       -       gibibyte     GiB             1024^3
-        # terabyte     TB               1000^4       -       tebibyte     TiB             1024^4
-        # petabyte     PB               1000^5       -       pebibyte     PiB             1024^5
-
-        # Unit Name    Abbreviation     bits         -       Unit Name    Abbreviation    bits    
-        # bit          b                1            -       bit          b               1
-        # kilobit      Kb               1000         -       kibibit      Kib             1024
-        # megabit      Mb               1000^2       -       mebibit      Mib             1024^2
-        # gigabit      Gb               1000^3       -       gibibit      Gib             1024^3
-        # terabit      Tb               1000^4       -       tebibit      Tib             1024^4
-        # petabit      Pb               1000^5       -       pebibit      Pib             1024^5
-
-        # 1 byte = 8 bits
+        """
+        Define values for converting data units and setting value precision.
+        Data unit options: 0: Bytes (ISO), 1: Bytes (IEC), 2: bits (ISO), 3: bits (IEC).
+        """
 
         self.data_unit_list = [[0, "B", "B", "b", "b"], [1, "KiB", "KB", "Kib", "Kb"], [2, "MiB", "MB", "Mib", "Mb"],
                               [3, "GiB", "GB", "Gib", "Gb"], [4, "TiB", "TB", "Tib", "Tb"], [5, "PiB", "PB", "Pib", "Pb"]]
 
-        # Data unit options: 0: Bytes (ISO), 1: Bytes (IEC), 2: bits (ISO), 3: bits (IEC).
 
-
-    # ----------------------- Called for converting data units and setting value precision (called from several modules) -----------------------
     def performance_data_unit_converter_func(self, data_type, data_type_option, data, unit, precision):
+        """
+        Convert data units and set value precision.
+        """
 
         data_unit_list = self.data_unit_list
         if isinstance(data, str) == True:
@@ -1650,8 +1642,5 @@ class Performance:
         return f'{data:.{precision}f} {unit}'
 
 
-
-#if __name__ == "__main__":
-# Run class
 MainWindow()
 
