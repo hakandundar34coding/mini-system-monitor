@@ -1,5 +1,8 @@
 # Mini System Monitor
 
+### v1.2.0 (07.12.2022)
+  * Fix: Application start notify
+
 ### v1.1.1 (31.10.2022)
   * Improved: System up time for long times
 
