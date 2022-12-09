@@ -29,7 +29,7 @@
 </p>
 
 <p align="center">
-    <a href='https://flathub.org/apps/details/io.github.hakandundar34coding.system-monitoring-center'>
+    <a href='https://flathub.org/apps/details/io.github.hakandundar34coding.mini-system-monitor'>
         <img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/>
     </a>
 </p>
