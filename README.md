@@ -1,7 +1,7 @@
 # Mini System Monitor
 
 <p align="center">
-    <img src="https://github.com/hakandundar34coding/mini-system-monitor/blob/master/icons/mini-system-monitor.svg" alt="ss" width="100">
+    <img src="https://github.com/hakandundar34coding/mini-system-monitor/blob/master/icons/mini-system-monitor.svg" alt="image" width="100">
 </p>
 
 <p align="center">
@@ -28,17 +28,20 @@
     </a>
 </p>
 
+<p align="center">
+    <a href='https://flathub.org/apps/details/io.github.hakandundar34coding.system-monitoring-center'>
+        <img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.svg'/>
+    </a>
+</p>
+
 
 ### Features:
 - Monitoring CPU, RAM, Disk, Network usage
 - Free and open source
 
 
-### Installation:
-- Mini System Monitor is installable from Flatpak.
-
-
 ### Dependencies:
+Dependencies for running from source code:
 - `python3 (>=3.6), python3-cairo, python3-tk, python3-pil`
 
 
