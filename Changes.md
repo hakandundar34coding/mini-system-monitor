@@ -1,5 +1,8 @@
 # Mini System Monitor
 
+### v1.3.0 (09.12.2022)
+  * Updated dependency versions
+
 ### v1.2.0 (07.12.2022)
   * Fix: Application start notify
 
