@@ -5,12 +5,12 @@ sdk: org.freedesktop.Sdk
 command: mini-system-monitor
 
 finish-args:
-  # For X11 shared memory access (higher performance for X11).
+  # For X11 shared memory access (higher performance for X11)
   - --share=ipc
-  # For monitoring data download/upload speed on network cards.
+  # For monitoring data download/upload speed on network cards
   - --share=network
   - --socket=x11
-  # For monitoring data download/upload speed on network cards.
+  # For monitoring data download/upload speed on network cards
   - --device=all
 
 cleanup:
@@ -20,7 +20,7 @@ cleanup:
 
 modules:
 
-  # For Tkinter GUI.
+  # For Tkinter GUI
   - name: tkinter
     buildsystem: simple
     build-commands:
@@ -41,8 +41,8 @@ modules:
           - /man
         sources:
           - type: archive
-            url: https://prdownloads.sourceforge.net/tcl/tcl8.6.12-src.tar.gz
-            sha256: 26c995dd0f167e48b11961d891ee555f680c175f7173ff8cb829f4ebcde4c1a6
+            url: https://prdownloads.sourceforge.net/tcl/tcl8.6.13-src.tar.gz
+            sha256: 43a1fae7412f61ff11de2cfd05d28cfc3a73762f354a417c62370a54e2caf066
             x-checker-data:
               type: anitya
               project-id: 4941
@@ -59,15 +59,15 @@ modules:
           - /man
         sources:
           - type: archive
-            url: https://prdownloads.sourceforge.net/tcl/tk8.6.12-src.tar.gz
-            sha256: 12395c1f3fcb6bed2938689f797ea3cdf41ed5cb6c4766eec8ac949560310630
+            url: https://prdownloads.sourceforge.net/tcl/tk8.6.13-src.tar.gz
+            sha256: 2e65fa069a23365440a3c56c556b8673b5e32a283800d8d9b257e3f584ce0675
             x-checker-data:
               type: anitya
               project-id: 11426
               stable-only: true
               url-template: https://prdownloads.sourceforge.net/tcl/tk$version-src.tar.gz
 
-  # For drawing Cairo graphics.
+  # For drawing Cairo graphics
   - name: pycairo
     buildsystem: simple
     build-commands:
@@ -78,7 +78,7 @@ modules:
         url: https://files.pythonhosted.org/packages/bc/3f/64e6e066d163fbcf13213f9eeda0fc83376243335ea46a66cefd70d62e8f/pycairo-1.20.1.tar.gz
         sha256: 1ee72b035b21a475e1ed648e26541b04e5d7e753d75ca79de8c583b25785531b
 
-  # For showing images on the GUI.
+  # For showing images on the GUI
   - name: Pillow
     buildsystem: simple
     build-commands:
@@ -97,4 +97,4 @@ modules:
     sources:
       - type: git
         url: https://github.com/hakandundar34coding/mini-system-monitor.git
-        commit: c13814ddfc6f0ef19552e8d2bc5ffa029397c0b8
+        commit: 33b93ad818ae79c5589e3bb509e24c88598c94fd
