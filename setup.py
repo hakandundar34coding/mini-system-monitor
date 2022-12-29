@@ -43,7 +43,6 @@ if PREFIX == "/app":
         ("/app/share/icons/hicolor/scalable/apps/", ["icons/io.github.hakandundar34coding.mini-system-monitor.svg"]),
         ("/app/share/mini-system-monitor/src/", files_in_folder("src/")),
         ("/app/share/mini-system-monitor/icons/", ["icons/mini-system-monitor.png"]),
-        ("/app/share/mini-system-monitor/images/", ["images/smc_screenshot1.png"]),
         ("/app/share/appdata/", ["io.github.hakandundar34coding.mini-system-monitor.appdata.xml"]),
         ("/app/bin/", ["integration/mini-system-monitor"])
     ]
@@ -58,14 +57,12 @@ if PREFIX != "/app":
         os.chmod(file, 0o644)
     os.chmod("icons/mini-system-monitor.svg", 0o644)
     os.chmod("icons/mini-system-monitor.png", 0o644)
-    os.chmod("images/smc_screenshot1.png", 0o644)
 
     data_files = [
         ("/usr/share/applications/", ["integration/com.github.hakandundar34coding.mini-system-monitor.desktop"]),
         ("/usr/share/icons/hicolor/scalable/apps/", ["icons/mini-system-monitor.svg"]),
         ("/usr/share/mini-system-monitor/src/", files_in_folder("src/")),
         ("/usr/share/mini-system-monitor/icons/", ["icons/mini-system-monitor.png"]),
-        ("/usr/share/mini-system-monitor/images/", ["images/smc_screenshot1.png"]),
         ("/usr/bin/", ["integration/mini-system-monitor"])
     ]
 
@@ -92,6 +89,7 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
         "Operating System :: POSIX :: Linux",
         "Topic :: System :: Monitoring",
