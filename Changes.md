@@ -1,5 +1,8 @@
 # Mini System Monitor
 
+### v1.4.0 (29.12.2022)
+  * Several GUI and code simplifications
+
 ### v1.3.0 (09.12.2022)
   * Updated dependency versions
 

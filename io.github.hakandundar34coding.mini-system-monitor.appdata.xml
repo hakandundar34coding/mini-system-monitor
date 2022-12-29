@@ -23,6 +23,13 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.4.0" date="2022-12-29">
+      <description>
+        <p>
+          Updated dependency versions
+        </p>
+      </description>
+    </release>
     <release version="1.3.0" date="2022-12-09">
       <description>
         <p>
