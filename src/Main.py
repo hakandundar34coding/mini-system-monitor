@@ -1,19 +1,16 @@
 #!/usr/bin/env python3
 
 import tkinter as tk
-from tkinter import ttk
 
 import cairo
 from cairo import ImageSurface, Context, FORMAT_ARGB32
 
-import PIL
 from PIL import Image, ImageTk
 
 from math import sin, cos
 import webbrowser
 
 import os
-import sys
 
 
 class Config:
@@ -37,7 +34,6 @@ class Config:
         self.chart_data_history = 5
         self.remember_window_size = "530x420"
         self.chart_line_color_cpu_percent = [0.29, 0.78, 0.0, 1.0]
-        self.selected_cpu_core = ""
         self.chart_line_color_memory_percent = [0.27, 0.49, 1.0, 1.0]
         self.performance_memory_data_precision = 1
         self.performance_memory_data_unit = 0
@@ -77,9 +73,6 @@ class MainWindow:
         # Run function after window is shown
         self.main_window.after_idle(self.main_window_show_func)
 
-        # Run function if window close button (X) is clicked
-        self.main_window.protocol('WM_DELETE_WINDOW', self.main_window_close_button_func)
-
         # Start main loop for keeping the window on the screen.
         self.main_window.mainloop()
 
@@ -90,32 +83,18 @@ class MainWindow:
         """
 
         # Main Frame
-        frame_main = tk.Frame(self.main_window)
-        frame_main.rowconfigure(1, minsize=1, weight=1)
-        frame_main.columnconfigure(0, minsize=1, weight=1)
-        frame_main.grid(row=0, column=0, sticky="nsew", padx=0, pady=0)
-
-        # Frame (buttons)
-        frame_buttons = tk.Frame(frame_main)
-        frame_buttons.rowconfigure(0, minsize=1, weight=1)
-        frame_buttons.columnconfigure(1, minsize=1, weight=1)
-        frame_buttons.grid(row=0, column=0, sticky="nsew", padx=0, pady=0)
-
-        # Button (More...)
-        self.button1 = tk.Button(frame_buttons, text="More...", width=5, height=1, command=self.more_button_func)
-        self.button1.grid(row=0, column=0, sticky="ew")
-
-        # Button (Settings)
-        self.button2 = tk.Button(frame_buttons, text="Settings", width=5, height=1, command=self.settings_button_func)
-        self.button2.grid(row=0, column=1, sticky="ew")
+        main_frame = tk.Frame(self.main_window)
+        main_frame.rowconfigure(1, minsize=1, weight=1)
+        main_frame.columnconfigure(0, minsize=1, weight=1)
+        main_frame.grid(row=0, column=0, sticky="nsew", padx=0, pady=0)
 
         # Button (About)
-        self.button3 = tk.Button(frame_buttons, text="About", width=5, height=1, command=self.about_button_func)
-        self.button3.grid(row=0, column=2, sticky="ew")
+        self.about_button = tk.Button(main_frame, text="About", width=5, height=1, command=self.about_button_func)
+        self.about_button.grid(row=0, column=0, sticky="ew")
 
         # Label (for showing graphics)
-        self.label1 = tk.Label(frame_main)
-        self.label1.grid(row=1, column=0, sticky="nsew")
+        self.graphics_label = tk.Label(main_frame)
+        self.graphics_label.grid(row=1, column=0, sticky="nsew")
 
         # Surface (for showing Cairo context)
         window_size = Config.remember_window_size.split("x")
@@ -123,23 +102,7 @@ class MainWindow:
         # Cairo Context (for drawing graphics)
         self.context1 = Context(self.surface1)
         # Update label for showing graphics faster on start.
-        self.label1.update()
-
-
-    def more_button_func(self):
-        """
-        Show "More..." window.
-        """
-
-        self.more_window = MoreWindow(self.main_window)
-
-
-    def settings_button_func(self):
-        """
-        Show "Settings" window.
-        """
-
-        self.settings_window = SettingsWindow(self.main_window)
+        self.graphics_label.update()
 
 
     def about_button_func(self):
@@ -164,20 +127,6 @@ class MainWindow:
         self.main_gui_tab_loop_func()
 
 
-    def main_window_close_button_func(self):
-        """
-        Detect clicks on the window close button (X) and exit the application.
-        """
-
-        # Save current size of the main window.
-        main_window_size_and_position = self.main_window.geometry()
-        Config.remember_window_size = main_window_size_and_position.split("+")[0]
-
-        # Delete main window and exit the application.
-        self.main_window.destroy()
-        sys.exit()
-
-
     def main_gui_tab_loop_func(self):
         """
         Repeat running the functions.
@@ -187,137 +136,7 @@ class MainWindow:
 
         Performance.performance_summary_chart_draw_func()
 
-        # Wait and run the function again in order to generate a loop. Time is defined in milliseconds (1000 ms = 1 second).
         self.main_window.after(int(Config.update_interval*1000), self.main_gui_tab_loop_func)
-
-
-class MoreWindow():
-
-    def __init__(self, main_window):
-
-        self.main_window = main_window
-
-        # Window (More...)
-        self.window2001 = tk.Toplevel(self.main_window)
-        self.window2001.wm_transient(self.main_window)                                        # "wm_transient()" is used in order to keep the about window on top of the main window.
-        self.window2001.grab_set()                                                            # "grab_set()" is used in order to prevent usage of the main window.
-        self.window2001.resizable(False, False)                                               # Disable window sizing in x and y directions.
-        self.window2001.title("More...")
-
-        # "More..." window GUI objects
-        self.more_window_gui_objects()
-
-
-    def more_window_gui_objects(self):
-        """
-        More window GUI objects
-        """
-
-        # Main Frame
-        frame_main2001 = tk.Frame(self.window2001)
-        frame_main2001.rowconfigure(0, minsize=1, weight=1)
-        frame_main2001.columnconfigure(0, minsize=1, weight=1)
-        frame_main2001.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
-
-        # Labels
-        label2001 = tk.Label(frame_main2001, text="See free and open source 'System Monitoring Center' for more features.")
-        label2001.grid(row=0, column=0, sticky="ns", padx=0, pady=0)
-
-        label2002 = tk.Label(frame_main2001, text="Web Page", fg="blue", cursor="hand2")
-        label2002.grid(row=1, column=0, sticky="ns", padx=0, pady=0)
-        label2002.bind("<Button-1>", self.more_window_web_page_link_func)
-
-        # Label (for showing image)
-        self.image2001 = tk.PhotoImage(file=os.path.dirname(os.path.realpath(__file__)) + "/../images/smc_screenshot1.png")
-        label2001 = tk.Label(frame_main2001, image=self.image2001)
-        label2001.grid(row=2, column=0, sticky="ns", padx=0, pady=0)
-
-
-    def more_window_web_page_link_func(self, event):
-        """
-        Open the link in a web browser.
-        """
-
-        webbrowser.open_new("https://github.com/hakandundar34coding/system-monitoring-center")
-
-
-class SettingsWindow():
-
-    def __init__(self, main_window):
-
-        self.main_window = main_window
-
-        # Window (Settings)
-        self.window3001 = tk.Toplevel(self.main_window)
-        self.window3001.wm_transient(self.main_window)                                        # "wm_transient()" is used in order to keep the about window on top of the main window.
-        self.window3001.grab_set()                                                            # "grab_set()" is used in order to prevent usage of the main window.
-        self.window3001.resizable(False, False)                                               # Disable window sizing in x and y directions.
-        self.window3001.title("Settings")
-
-        # "Settings" window GUI objects
-        self.settings_window_gui_objects()
-
-
-    def settings_window_gui_objects(self):
-        """
-        Settings window GUI objects
-        """
-
-        # Main Frame
-        frame_main3001 = tk.Frame(self.window3001)
-        frame_main3001.rowconfigure(0, minsize=1, weight=1)
-        frame_main3001.columnconfigure(0, minsize=1, weight=1)
-        frame_main3001.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
-
-        # Labels
-        label3001 = tk.Label(frame_main3001, text="Disk")
-        label3001.grid(row=0, column=0, sticky="w")
-        label3002 = tk.Label(frame_main3001, text="Network Card")
-        label3002.grid(row=1, column=0, sticky="w")
-
-        # Comboboxes
-        self.combobox3001_variable = tk.StringVar()
-        self.combobox3001 = ttk.Combobox(frame_main3001, textvariable=self.combobox3001_variable)
-        self.combobox3001.grid(row=0, column=1, sticky="w", padx=5, pady=2)
-        self.combobox3001['state'] = 'readonly'
-        self.combobox3001.bind('<<ComboboxSelected>>', self.settings_disk_selection_func)
-        disk_list = Performance.disk_list_system_ordered
-        self.combobox3001['values'] = disk_list
-        #self.combobox3001.set("")
-
-        self.combobox3002_variable = tk.StringVar()
-        self.combobox3002 = ttk.Combobox(frame_main3001, textvariable=self.combobox3002_variable)
-        self.combobox3002.grid(row=1, column=1, sticky="w", padx=5, pady=2)
-        self.combobox3002['state'] = 'readonly'
-        self.combobox3002.bind('<<ComboboxSelected>>', self.settings_network_card_selection_func)
-        network_card_list = Performance.network_card_list
-        self.combobox3002['values'] = network_card_list
-        #self.combobox3002.set("")
-
-        # Set GUI objects by using user settings.
-        self.combobox3002.current(Performance.selected_network_card_number)
-        self.combobox3001.current(Performance.selected_disk_number)
-
-
-    def settings_disk_selection_func(self, event):
-        """
-        Select disk.
-        """
-
-        selected_device = self.combobox3001.get()
-        Config.selected_disk = selected_device
-        Performance.performance_set_selected_disk_func()
-
-
-    def settings_network_card_selection_func(self, event):
-        """
-        Select network card.
-        """
-
-        selected_device = self.combobox3002.get()
-        Config.selected_network_card = selected_device
-        Performance.performance_set_selected_network_card_func()
-
 
 
 class AboutWindow():
@@ -330,9 +149,11 @@ class AboutWindow():
 
         # Window (About)
         self.window1001 = tk.Toplevel(self.main_window)
-        self.window1001.wm_transient(self.main_window)                                        # "wm_transient()" is used in order to keep the about window on top of the main window.
-        self.window1001.grab_set()                                                            # "grab_set()" is used in order to prevent usage of the main window.
-        self.window1001.resizable(False, False)                                               # Disable window sizing in x and y directions.
+        # Keep the window on top of the main window
+        self.window1001.wm_transient(self.main_window)
+        # Prevent usage of the main window
+        self.window1001.grab_set()
+        self.window1001.resizable(False, False)
         self.window1001.title("About")
 
         # "About" window GUI objects
@@ -351,54 +172,47 @@ class AboutWindow():
             pass
 
         # Main Frame
-        frame_main1001 = tk.Frame(self.window1001)
-        frame_main1001.rowconfigure(0, minsize=1, weight=1)
-        frame_main1001.columnconfigure(0, minsize=1, weight=1)
-        frame_main1001.grid(row=0, column=0, sticky="nsew", padx=1, pady=1)
+        main_frame = tk.Frame(self.window1001)
+        main_frame.rowconfigure(0, minsize=1, weight=1)
+        main_frame.columnconfigure(0, minsize=1, weight=1)
+        main_frame.grid(row=0, column=0, sticky="nsew", padx=1, pady=1)
 
         # Image
-        label1001 = tk.Label(frame_main1001, image=self.application_icon)
-        label1001.grid(row=0, column=0, sticky="ns", padx=10, pady=10)
+        image_label = tk.Label(main_frame, image=self.application_icon)
+        image_label.grid(row=0, column=0, sticky="ns", padx=10, pady=10)
 
         # Labels
-        label1002 = tk.Label(frame_main1001, text="Mini System Monitor", font=("bold"))
-        label1002.grid(row=1, column=0, sticky="ns", padx=0, pady=0)
+        name_label = tk.Label(main_frame, text="Mini System Monitor", font=("bold"))
+        name_label.grid(row=1, column=0, sticky="ns", padx=0, pady=0)
 
-        label1002 = tk.Label(frame_main1001, text=software_version)
-        label1002.grid(row=2, column=0, sticky="ns", padx=0, pady=4)
+        version_label = tk.Label(main_frame, text=software_version)
+        version_label.grid(row=2, column=0, sticky="ns", padx=0, pady=4)
 
-        label1003 = tk.Label(frame_main1001, text="Mini version of 'System Monitoring Center'.")
-        label1003.grid(row=3, column=0, sticky="ns", padx=0, pady=5)
+        smc_frame = tk.Frame(main_frame)
+        smc_frame.rowconfigure(0, minsize=1, weight=1)
+        smc_frame.columnconfigure(0, minsize=1, weight=1)
+        smc_frame.grid(row=3, column=0, sticky="ns", padx=1, pady=1)
 
-        label1004 = tk.Label(frame_main1001, text="Web Page", fg="blue", cursor="hand2")
-        label1004.grid(row=4, column=0, sticky="ns", padx=0, pady=3)
-        label1004.bind("<Button-1>", self.about_window_web_page_link_func)
+        smc_label1 = tk.Label(smc_frame, text="Mini version of")
+        smc_label1.grid(row=0, column=0, sticky="ns", padx=0, pady=5)
 
-        label1005 = tk.Label(frame_main1001, text="© 2022 Hakan Dündar")
-        label1005.grid(row=5, column=0, sticky="ns", padx=0, pady=0)
+        smc_label2 = tk.Label(smc_frame, text="System Monitoring Center", fg="blue", cursor="hand2")
+        smc_label2.grid(row=0, column=1, sticky="ns", padx=0, pady=3)
+        smc_label2.bind("<Button-1>", lambda e:webbrowser.open_new("https://github.com/hakandundar34coding/system-monitoring-center"))
 
-        label1006 = tk.Label(frame_main1001, text="This program comes with absolutely no warranty.\nSee the GNU General Public License, version 3 or later for details.")
-        label1006.grid(row=6, column=0, sticky="ns", padx=0, pady=5)
+        web_page_label = tk.Label(main_frame, text="Web Page", fg="blue", cursor="hand2")
+        web_page_label.grid(row=4, column=0, sticky="ns", padx=0, pady=0)
+        web_page_label.bind("<Button-1>", lambda e:webbrowser.open_new("https://github.com/hakandundar34coding/mini-system-monitor"))
 
-        label1007 = tk.Label(frame_main1001, text="GPLv3", fg="blue", cursor="hand2")
-        label1007.grid(row=7, column=0, sticky="ns")
-        label1007.bind("<Button-1>", self.about_window_license_link_func)
+        copyright_label = tk.Label(main_frame, text="© 2022 Hakan Dündar")
+        copyright_label.grid(row=5, column=0, sticky="ns", padx=0, pady=4)
 
+        license_label = tk.Label(main_frame, text="This program comes with absolutely no warranty.\nSee the GNU General Public License, version 3 or later for details.")
+        license_label.grid(row=6, column=0, sticky="ns", padx=0, pady=0)
 
-    def about_window_web_page_link_func(self, event):
-        """
-        Open the link in a web browser.
-        """
-
-        webbrowser.open_new("https://github.com/hakandundar34coding/mini-system-monitor")
-
-
-    def about_window_license_link_func(self, event):
-        """
-        Open the link in a web browser.
-        """
-
-        webbrowser.open_new("https://www.gnu.org/licenses/gpl-3.0.html")
+        license_link_label = tk.Label(main_frame, text="GPLv3", fg="blue", cursor="hand2")
+        license_link_label.grid(row=7, column=0, sticky="ns")
+        license_link_label.bind("<Button-1>", lambda e:webbrowser.open_new("https://www.gnu.org/licenses/gpl-3.0.html"))
 
 
 class Performance:
@@ -492,15 +306,8 @@ class Performance:
         self.chart_data_history = Config.chart_data_history
 
         # Define initial values for CPU usage percent
-        self.logical_core_list = []
-        self.cpu_time_all_prev = []
-        self.cpu_time_load_prev = []
-        self.cpu_usage_percent_per_core = []
-        self.cpu_usage_percent_ave = [0] * self.chart_data_history
-
-        # Define initial values for RAM usage percent and swap usage percent
-        self.ram_usage_percent = [0] * self.chart_data_history
-        self.swap_usage_percent = [0] * self.chart_data_history
+        self.cpu_time_all_prev = 0
+        self.cpu_time_load_prev = 0
 
         # Define initial values for disk read speed and write speed
         # Disk data from /proc/diskstats are multiplied by 512 in order to find values in the form of byte. Disk sector size for all disk device could be found in "/sys/block/[disk device name such as sda]/queue/hw_sector_size". Linux uses 512 value for all disks without regarding device real block size (source: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/types.h?id=v4.4-rc6#n121https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/types.h?id=v4.4-rc6#n121).
@@ -520,7 +327,6 @@ class Performance:
 
         # Reset selected hardware if "remember_last_selected_hardware" prefrence is disabled by the user.
         if Config.remember_last_selected_hardware == 0:
-            Config.selected_cpu_core = ""
             Config.selected_disk = ""
             Config.selected_network_card = ""
 
@@ -531,73 +337,37 @@ class Performance:
         Get CPU, memory, disk and network usage data.
         """
 
-        # Definition for lower CPU usage because this variable is used multiple times in this function.
-        update_interval = Config.update_interval
+        # Get average CPU usage
+        with open("/proc/stat") as reader:
+            proc_stat_lines = reader.read().split("\n")
+        cpu_time = proc_stat_lines[0].split()
+        cpu_time_all = int(cpu_time[1]) + int(cpu_time[2]) + int(cpu_time[3]) + int(cpu_time[4]) + int(cpu_time[5]) + int(cpu_time[6]) + int(cpu_time[7]) + int(cpu_time[8]) + int(cpu_time[9])
+        cpu_time_load = cpu_time_all - int(cpu_time[4]) - int(cpu_time[5])
+        if cpu_time_all - self.cpu_time_all_prev == 0:
+            cpu_time_all = cpu_time_all + 1
+        self.cpu_usage_percent = ((cpu_time_load - self.cpu_time_load_prev) / (cpu_time_all - self.cpu_time_all_prev) * 100)
+        if self.cpu_time_all_prev == 0:
+            self.cpu_usage_percent = 0
+        self.cpu_time_all_prev = cpu_time_all
+        self.cpu_time_load_prev = cpu_time_load
 
-        # Get CPU core list
-        self.logical_core_list_system_ordered = []                                            # "logical_core_list_system_ordered" contains online CPU core numbers in the order of "/proc/stats" file content which is in "ascending" online core number order.
-        with open("/proc/stat") as reader:                                                    # "/proc/stat" file contains online logical CPU core numbers (all cores without regarding CPU sockets, physical/logical cores) and CPU times since system boot.
-            proc_stat_lines = reader.read().split("intr", 1)[0].strip().split("\n")[1:]       # Trimmed unneeded information in the file
-        for line in proc_stat_lines:
-            self.logical_core_list_system_ordered.append(line.split(" ", 1)[0])               # Add CPU core names into a temporary list in ascending core number order. This list will be used with logical_core_list in order to track last online-made CPU core. This operations are performed in order to track CPU usage per core continuously even if CPU cores made online/offline.
-        self.number_of_logical_cores = len(self.logical_core_list_system_ordered)             # "logical_core_list" list contains online CPU core numbers and ordering changes when online/offline CPU core changes are made. Last online-made core is listed as the last core.
-        logical_core_list_prev = self.logical_core_list[:]                                    # Get copy of the list. Otherwise, lists will be linked.
-        for i, cpu_core in enumerate(self.logical_core_list_system_ordered):                  # Track the changes if CPU core is made online/offline
-            if cpu_core not in self.logical_core_list:                                        # Add new core number into logical_core_list if CPU core is made online. Also CPU time data related to online-made the core is appended into lists.
-                self.logical_core_list.append(cpu_core)
-                cpu_time = proc_stat_lines[i].split()
-                self.cpu_time_all_prev.append(int(cpu_time[1]) + int(cpu_time[2]) + int(cpu_time[3]) + int(cpu_time[4]) + int(cpu_time[5]) + int(cpu_time[6]) + int(cpu_time[7]) + int(cpu_time[8]) + int(cpu_time[9]))
-                self.cpu_time_load_prev.append(self.cpu_time_all_prev[-1] - int(cpu_time[4]) - int(cpu_time[5]))
-                self.cpu_usage_percent_per_core.append([0] * self.chart_data_history)
-        for cpu_core in self.logical_core_list[:]:                                            # Remove core number from logical_core_list if it is made offline. Also CPU time data related to offline-made the core is removed from lists.
-            if cpu_core not in self.logical_core_list_system_ordered:
-                cpu_core_index_to_remove = self.logical_core_list.index(cpu_core)
-                del self.cpu_time_all_prev[cpu_core_index_to_remove]
-                del self.cpu_time_load_prev[cpu_core_index_to_remove]
-                del self.cpu_usage_percent_per_core[cpu_core_index_to_remove]
-                self.logical_core_list.remove(cpu_core)
-        if logical_core_list_prev != self.logical_core_list:
-            pass
-        # Get cpu_usage_percent_per_core, cpu_usage_percent_ave
-        cpu_time_all = []
-        cpu_time_load = []
-        for i, cpu_core in enumerate(self.logical_core_list):                                 # Get CPU core times calculate CPU usage values and append usage values into lists in the core number order listed in logical_core_list.
-            cpu_time = proc_stat_lines[self.logical_core_list_system_ordered.index(cpu_core)].split()
-            cpu_time_all.append(int(cpu_time[1]) + int(cpu_time[2]) + int(cpu_time[3]) + int(cpu_time[4]) + int(cpu_time[5]) + int(cpu_time[6]) + int(cpu_time[7]) + int(cpu_time[8]) + int(cpu_time[9]))    # All time since boot for the cpu core
-            cpu_time_load.append(cpu_time_all[-1] - int(cpu_time[4]) - int(cpu_time[5]))      # Time elapsed during core processing for the core
-            if cpu_time_all[-1] - self.cpu_time_all_prev[i] == 0:
-                cpu_time_all[-1] = cpu_time_all[-1] + 1                                       # Append 1 CPU time (a negligible value) in order to avoid zeor division error in the first loop after application start or in the first loop of newly online-made CPU core. It is corrected in the next loop.
-            self.cpu_usage_percent_per_core[i].append((cpu_time_load[-1] - self.cpu_time_load_prev[i]) / (cpu_time_all[-1] - self.cpu_time_all_prev[i]) * 100)
-            del self.cpu_usage_percent_per_core[i][0]
-        cpu_usage_average = []
-        for cpu_usage_per_core in self.cpu_usage_percent_per_core:
-            cpu_usage_average.append(cpu_usage_per_core[-1])
-        self.cpu_usage_percent_ave.append(sum(cpu_usage_average) / self.number_of_logical_cores)    # Calculate average CPU usage for all logical cores (summation of CPU usage per core / number of logical cores)
-        del self.cpu_usage_percent_ave[0]                                                     # Delete the first CPU usage percent value from the list in order to keep list lenght same. Because a new value is appended in every loop. This list is used for CPU usage percent graphic.        
-        self.cpu_time_all_prev = list(cpu_time_all)                                           # Use the values as "previous" data. This data will be used in the next loop for calculating time difference.
-        self.cpu_time_load_prev = list(cpu_time_load)
-
-        # Get ram_usage_percent
+        # Get RAM usage percent
         with open("/proc/meminfo") as reader:
             memory_info = reader.read()
-        self.ram_total = int(memory_info.split("MemTotal:", 1)[1].split("\n", 1)[0].split(" ")[-2].strip()) *1024
-        self.ram_free = int(memory_info.split("\nMemFree:", 1)[1].split("\n", 1)[0].split(" ")[-2].strip()) *1024
-        self.ram_available = int(memory_info.split("\nMemAvailable:", 1)[1].split("\n", 1)[0].split(" ")[-2].strip()) *1024
-        self.ram_used = self.ram_total - self.ram_available
-        self.ram_usage_percent.append(self.ram_used / self.ram_total * 100)
-        del self.ram_usage_percent[0]
-        # Get swap_usage_percent
-        self.swap_total = int(memory_info.split("\nSwapTotal:", 1)[1].split("\n", 1)[0].split(" ")[-2].strip()) *1024
-        self.swap_free = int(memory_info.split("\nSwapFree:", 1)[1].split("\n", 1)[0].split(" ")[-2].strip()) *1024
+        ram_total = int(memory_info.split("MemTotal:", 1)[1].split("\n", 1)[0].split(" ")[-2].strip()) *1024
+        ram_available = int(memory_info.split("\nMemAvailable:", 1)[1].split("\n", 1)[0].split(" ")[-2].strip()) *1024
+        ram_used = ram_total - ram_available
+        self.ram_usage_percent = ram_used / ram_total * 100
+
+        # Get swap usage percent
+        swap_total = int(memory_info.split("\nSwapTotal:", 1)[1].split("\n", 1)[0].split(" ")[-2].strip()) *1024
+        swap_free = int(memory_info.split("\nSwapFree:", 1)[1].split("\n", 1)[0].split(" ")[-2].strip()) *1024
         # Calculate values if swap memory exists.
-        if self.swap_free != 0:
-            self.swap_used = self.swap_total - self.swap_free
-            self.swap_usage_percent.append(self.swap_used / self.swap_total * 100)
-        # Set values as "0" if swap memory does not exist.
+        if swap_free != 0:
+            swap_used = swap_total - swap_free
+            self.swap_usage_percent = swap_used / swap_total * 100
         else:
-            self.swap_used = 0
-            self.swap_usage_percent.append(0)
-        del self.swap_usage_percent[0]
+            self.swap_usage_percent = 0
 
         # Get disk_list
         self.disk_list_system_ordered = []
@@ -640,8 +410,8 @@ class Performance:
             disk_data = proc_diskstats_lines_filtered[self.disk_list_system_ordered.index(disk)].split()
             self.disk_read_data.append(int(disk_data[5]) * self.disk_sector_size)
             self.disk_write_data.append(int(disk_data[9]) * self.disk_sector_size)
-            self.disk_read_speed[i].append((self.disk_read_data[-1] - self.disk_read_data_prev[i]) / update_interval)
-            self.disk_write_speed[i].append((self.disk_write_data[-1] - self.disk_write_data_prev[i]) / update_interval)
+            self.disk_read_speed[i].append((self.disk_read_data[-1] - self.disk_read_data_prev[i]) / Config.update_interval)
+            self.disk_write_speed[i].append((self.disk_write_data[-1] - self.disk_write_data_prev[i]) / Config.update_interval)
             del self.disk_read_speed[i][0]
             del self.disk_write_speed[i][0]
         self.disk_read_data_prev = list(self.disk_read_data)
@@ -672,8 +442,8 @@ class Performance:
                 del self.network_receive_speed[network_card_index_to_remove]
                 del self.network_send_speed[network_card_index_to_remove]
                 self.network_card_list.remove(network_card)
-        if network_card_list_prev != self.network_card_list:
-            self.performance_set_selected_network_card_func()
+        #if network_card_list_prev != self.network_card_list:
+        self.performance_set_selected_network_card_func()
         # Get network_receive_speed, network_send_speed
         self.network_receive_bytes = []
         self.network_send_bytes = []
@@ -681,8 +451,8 @@ class Performance:
             network_data = proc_net_dev_lines[self.network_card_list_system_ordered.index(network_card)].split()
             self.network_receive_bytes.append(int(network_data[1]))
             self.network_send_bytes.append(int(network_data[9]))
-            self.network_receive_speed[i].append((self.network_receive_bytes[-1] - self.network_receive_bytes_prev[i]) / update_interval)
-            self.network_send_speed[i].append((self.network_send_bytes[-1] - self.network_send_bytes_prev[i]) / update_interval)
+            self.network_receive_speed[i].append((self.network_receive_bytes[-1] - self.network_receive_bytes_prev[i]) / Config.update_interval)
+            self.network_send_speed[i].append((self.network_send_bytes[-1] - self.network_send_bytes_prev[i]) / Config.update_interval)
             del self.network_receive_speed[i][0]
             del self.network_send_speed[i][0]
         self.network_receive_bytes_prev = list(self.network_receive_bytes)
@@ -695,7 +465,7 @@ class Performance:
         """
 
         # Get widgets from MainWindow.
-        widget = self.MainWindow.label1
+        widget = self.MainWindow.graphics_label
         ctx = self.MainWindow.context1
         surface1 = self.MainWindow.surface1
 
@@ -715,11 +485,11 @@ class Performance:
 
         # Get performance data and set text format.
         performance_cpu_usage_percent_precision = 0
-        cpu_usage_text = f'{self.cpu_usage_percent_ave[-1]:.{performance_cpu_usage_percent_precision}f}'
+        cpu_usage_text = f'{self.cpu_usage_percent:.{performance_cpu_usage_percent_precision}f}'
         performance_memory_data_precision = 0
-        ram_usage_text = f'{self.ram_usage_percent[-1]:.{performance_memory_data_precision}f}'
+        ram_usage_text = f'{self.ram_usage_percent:.{performance_memory_data_precision}f}'
         processes_number_text = self.cpu_system_up_time_func()
-        swap_usage_text = f'{self.swap_usage_percent[-1]:.0f}%'
+        swap_usage_text = f'{self.swap_usage_percent:.0f}%'
         selected_disk_number = self.selected_disk_number
         performance_disk_data_precision = 1
         performance_disk_data_unit = Config.performance_disk_data_unit
@@ -1423,7 +1193,7 @@ class Performance:
 
 
         # Draw CPU usage indicator.
-        cpu_usage_angle = self.cpu_usage_percent_ave[-1] / 10
+        cpu_usage_angle = self.cpu_usage_percent / 10
         start_angle = ((0*15)+105)*pi_number/180
         end_angle = ((cpu_usage_angle*15)+105)*pi_number/180
 
@@ -1442,7 +1212,7 @@ class Performance:
 
 
         # Draw RAM usage indicator.
-        ram_usage_angle = self.ram_usage_percent[-1] / 10
+        ram_usage_angle = self.ram_usage_percent / 10
         end_angle = (75-(0*15))*pi_number/180
         start_angle = (75-(ram_usage_angle*15))*pi_number/180
 
@@ -1572,6 +1342,22 @@ class Performance:
         ctx.show_text(network_upload_speed_text)
 
         ctx.restore()
+
+        # Draw "selected disk name" label on the lower-right side of the graph.
+        selected_disk = self.disk_list_system_ordered[self.selected_disk_number]
+        selected_disk_text = "Disk: " + selected_disk
+        ctx.set_font_size(gauge_disk_network_label_text_size)
+        ctx.move_to(frame_width - 160, frame_height - 21)
+        ctx.set_source_rgba(188/255, 191/255, 193/255, 1.0)
+        ctx.show_text(selected_disk_text)
+
+        # Draw "selected network card name" label on the lower-right side of the graph.
+        selected_network_card = self.network_card_list[self.selected_network_card_number]
+        selected_network_card_text = "Network Card: " + selected_network_card
+        ctx.set_font_size(gauge_disk_network_label_text_size)
+        ctx.move_to(frame_width - 160, frame_height - 1)
+        ctx.set_source_rgba(188/255, 191/255, 193/255, 1.0)
+        ctx.show_text(selected_network_card_text)
 
 
         # Show Cairo context as image on label.
