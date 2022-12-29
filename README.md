@@ -24,7 +24,7 @@
         <img src="https://img.shields.io/badge/Code-Python3-52a381">
     </a>
     <a href="https://github.com/hakandundar34coding/mini-system-monitor/tags">
-        <img src="https://img.shields.io/badge/GUI-Tkinter-52a381">
+        <img src="https://img.shields.io/badge/GUI-Tk-52a381">
     </a>
 </p>
 
@@ -37,6 +37,7 @@
 
 ### Features:
 - Monitoring CPU, RAM, Disk, Network usage
+- Uses less than 40 MiB RAM
 - Free and open source
 
 
