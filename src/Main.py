@@ -165,6 +165,8 @@ class AboutWindow():
         Settings window GUI objects
         """
 
+        import tkinter.font as tkFont
+
         # Get software version
         try:
             software_version = open(os.path.dirname(os.path.abspath(__file__)) + "/__version__").readline()
@@ -199,10 +201,16 @@ class AboutWindow():
         smc_label2 = tk.Label(smc_frame, text="System Monitoring Center", fg="blue", cursor="hand2")
         smc_label2.grid(row=0, column=1, sticky="ns", padx=0, pady=3)
         smc_label2.bind("<Button-1>", lambda e:webbrowser.open_new("https://github.com/hakandundar34coding/system-monitoring-center"))
+        label_font = tkFont.Font(smc_label2, smc_label2.cget("font"))
+        label_font.configure(underline = True)
+        smc_label2.configure(font=label_font)
 
         web_page_label = tk.Label(main_frame, text="Web Page", fg="blue", cursor="hand2")
         web_page_label.grid(row=4, column=0, sticky="ns", padx=0, pady=0)
         web_page_label.bind("<Button-1>", lambda e:webbrowser.open_new("https://github.com/hakandundar34coding/mini-system-monitor"))
+        label_font = tkFont.Font(web_page_label, web_page_label.cget("font"))
+        label_font.configure(underline = True)
+        web_page_label.configure(font=label_font)
 
         copyright_label = tk.Label(main_frame, text="© 2022 Hakan Dündar")
         copyright_label.grid(row=5, column=0, sticky="ns", padx=0, pady=4)
@@ -213,6 +221,9 @@ class AboutWindow():
         license_link_label = tk.Label(main_frame, text="GPLv3", fg="blue", cursor="hand2")
         license_link_label.grid(row=7, column=0, sticky="ns")
         license_link_label.bind("<Button-1>", lambda e:webbrowser.open_new("https://www.gnu.org/licenses/gpl-3.0.html"))
+        label_font = tkFont.Font(license_link_label, license_link_label.cget("font"))
+        label_font.configure(underline = True)
+        license_link_label.configure(font=label_font)
 
 
 class Performance:
