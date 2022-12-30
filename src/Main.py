@@ -10,6 +10,7 @@ from PIL import Image, ImageTk
 from math import sin, cos
 
 import os
+import time
 
 
 class Config:
@@ -329,6 +330,8 @@ class Performance:
         self.network_receive_bytes_prev = 0
         self.network_send_bytes_prev = 0
 
+        self.get_time_prev = time.time()
+
 
     def performance_background_loop_func(self):
         """
@@ -368,6 +371,9 @@ class Performance:
         else:
             self.swap_usage_percent = 0
 
+        # Get time for calculating disk speeds and network card speeds.
+        get_time = time.time()
+
         # Get disk_list
         with open("/proc/partitions") as reader:
             proc_partitions_lines = reader.read().strip().split("\n")[2:]
@@ -386,8 +392,8 @@ class Performance:
             if line_split[2] == selected_disk:
                 disk_read_data = int(line_split[5]) * self.disk_sector_size
                 disk_write_data = int(line_split[9]) * self.disk_sector_size
-                self.disk_read_speed = (disk_read_data - self.disk_read_data_prev) / Config.update_interval
-                self.disk_write_speed = (disk_write_data - self.disk_write_data_prev) / Config.update_interval
+                self.disk_read_speed = (disk_read_data - self.disk_read_data_prev) / (get_time - self.get_time_prev)
+                self.disk_write_speed = (disk_write_data - self.disk_write_data_prev) / (get_time - self.get_time_prev)
         if self.selected_disk_prev != selected_disk:
             self.disk_read_speed = 0
             self.disk_write_speed = 0
@@ -413,8 +419,8 @@ class Performance:
             if line_split[0].strip(":") == selected_network_card:
                 network_receive_bytes = int(line_split[1])
                 network_send_bytes = int(line_split[9])
-                self.network_receive_speed = (network_receive_bytes - self.network_receive_bytes_prev) / Config.update_interval
-                self.network_send_speed = (network_send_bytes - self.network_send_bytes_prev) / Config.update_interval
+                self.network_receive_speed = (network_receive_bytes - self.network_receive_bytes_prev) / (get_time - self.get_time_prev)
+                self.network_send_speed = (network_send_bytes - self.network_send_bytes_prev) / (get_time - self.get_time_prev)
         if self.selected_network_card_prev != selected_network_card:
             self.network_receive_speed = 0
             self.network_send_speed = 0
@@ -424,6 +430,8 @@ class Performance:
         self.network_receive_bytes_prev = network_receive_bytes
         self.network_send_bytes_prev = network_send_bytes
         self.selected_network_card_prev = selected_network_card
+
+        self.get_time_prev = get_time
 
 
     def performance_summary_chart_draw_func(self):
