@@ -211,7 +211,7 @@ class AboutWindow():
         label_font.configure(underline = True)
         web_page_label.configure(font=label_font)
 
-        copyright_label = tk.Label(main_frame, text="© 2022 Hakan Dündar")
+        copyright_label = tk.Label(main_frame, text="© 2023 Hakan Dündar")
         copyright_label.grid(row=5, column=0, sticky="ns", padx=0, pady=4)
 
         license_label = tk.Label(main_frame, text="This program comes with absolutely no warranty.\nSee the GNU General Public License, version 3 or later for details.")
