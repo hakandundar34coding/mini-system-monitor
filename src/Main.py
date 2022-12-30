@@ -24,7 +24,6 @@ class Config:
         Get settings.
         """
 
-        self.remember_last_selected_hardware = 0
         self.update_interval = 0.75
         self.remember_window_size = "530x420"
         self.chart_line_color_cpu_percent = [0.29, 0.78, 0.0, 1.0]
@@ -114,7 +113,7 @@ class MainWindow:
         Run code after the main window is shown.
         """
 
-        # Run "Performance" module in order to provide performance data to Performance tab.
+        # Run "Performance" module in order to provide performance data to graphics.
         global Performance
         Performance = Performance(self)
         Performance.performance_background_initial_func()
@@ -1366,8 +1365,6 @@ class Performance:
         """
 
         data_unit_list = self.data_unit_list
-        if isinstance(data, str) == True:
-            return data
 
         if unit == 0:
             power_of_value = 1024
