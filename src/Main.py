@@ -138,6 +138,8 @@ class AboutWindow():
 
     def __init__(self, main_window, application_icon):
 
+        global webbrowser, tkFont
+
         import webbrowser
         import tkinter.font as tkFont
 
