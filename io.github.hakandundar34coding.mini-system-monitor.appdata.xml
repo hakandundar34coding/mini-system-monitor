@@ -14,6 +14,7 @@
     <p>Features:</p>
     <ul>
       <li>Monitoring CPU, RAM, Disk, Network usage</li>
+      <li>Uses less than 40 MiB RAM</li>
       <li>Free and open source</li>
     </ul>
   </description>

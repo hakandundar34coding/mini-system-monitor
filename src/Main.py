@@ -8,7 +8,6 @@ from cairo import ImageSurface, Context, FORMAT_ARGB32
 from PIL import Image, ImageTk
 
 from math import sin, cos
-import webbrowser
 
 import os
 
@@ -17,21 +16,16 @@ class Config:
 
     def __init__(self):
 
-        self.config_default_general_general_func()
+        self.config_default_func()
 
 
-    def config_default_general_general_func(self):
+    def config_default_func(self):
         """
         Get settings.
         """
 
-        self.selected_disk = ""
-        self.selected_network_card = ""
-
-        # Read-only settings.
         self.remember_last_selected_hardware = 0
         self.update_interval = 0.75
-        self.chart_data_history = 5
         self.remember_window_size = "530x420"
         self.chart_line_color_cpu_percent = [0.29, 0.78, 0.0, 1.0]
         self.chart_line_color_memory_percent = [0.27, 0.49, 1.0, 1.0]
@@ -41,10 +35,12 @@ class Config:
         self.performance_disk_data_precision = 1
         self.performance_disk_data_unit = 0
         self.performance_disk_speed_bit = 0
+        self.selected_disk = ""
         self.chart_line_color_network_speed_data = [0.56, 0.30, 0.78, 1.0]
         self.performance_network_data_precision = 1
         self.performance_network_data_unit = 0
         self.performance_network_speed_bit = 0
+        self.selected_network_card = ""
 
 
 class MainWindow:
@@ -143,6 +139,9 @@ class AboutWindow():
 
     def __init__(self, main_window, application_icon):
 
+        import webbrowser
+        import tkinter.font as tkFont
+
         # Get main window and icon of the application.
         self.main_window = main_window
         self.application_icon = application_icon
@@ -164,8 +163,6 @@ class AboutWindow():
         """
         Settings window GUI objects
         """
-
-        import tkinter.font as tkFont
 
         # Get software version
         try:
@@ -277,7 +274,7 @@ class Performance:
                         break
 
         self.system_disk_list = system_disk_list
-        self.selected_disk_number = self.disk_list_system_ordered.index(selected_disk)
+        self.selected_disk_number = self.disk_list.index(selected_disk)
 
 
     def performance_set_selected_network_card_func(self):
@@ -314,32 +311,22 @@ class Performance:
         Performance initial function.
         """
 
-        self.chart_data_history = Config.chart_data_history
-
         # Define initial values for CPU usage percent
         self.cpu_time_all_prev = 0
         self.cpu_time_load_prev = 0
 
-        # Define initial values for disk read speed and write speed
-        # Disk data from /proc/diskstats are multiplied by 512 in order to find values in the form of byte. Disk sector size for all disk device could be found in "/sys/block/[disk device name such as sda]/queue/hw_sector_size". Linux uses 512 value for all disks without regarding device real block size (source: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/types.h?id=v4.4-rc6#n121https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/types.h?id=v4.4-rc6#n121).
+        # Define initial values for disk speeds
         self.disk_sector_size = 512
-        self.disk_list = []
-        self.disk_read_data_prev = []
-        self.disk_write_data_prev = []
-        self.disk_read_speed = []
-        self.disk_write_speed = []
+        self.selected_disk_prev = ""
+        self.disk_list_prev = []
+        self.disk_read_data_prev = 0
+        self.disk_write_data_prev = 0
 
-        # Define initial values for network receive speed and network send speed
-        self.network_card_list = []
-        self.network_receive_bytes_prev = []
-        self.network_send_bytes_prev =[]
-        self.network_receive_speed = []
-        self.network_send_speed = []
-
-        # Reset selected hardware if "remember_last_selected_hardware" prefrence is disabled by the user.
-        if Config.remember_last_selected_hardware == 0:
-            Config.selected_disk = ""
-            Config.selected_network_card = ""
+        # Define initial values for network card speeds
+        self.selected_network_card_prev = ""
+        self.network_card_list_prev = []
+        self.network_receive_bytes_prev = 0
+        self.network_send_bytes_prev = 0
 
 
     def performance_background_loop_func(self):
@@ -381,93 +368,61 @@ class Performance:
             self.swap_usage_percent = 0
 
         # Get disk_list
-        self.disk_list_system_ordered = []
-        proc_diskstats_lines_filtered = []
         with open("/proc/partitions") as reader:
             proc_partitions_lines = reader.read().strip().split("\n")[2:]
+        self.disk_list = []
         for line in proc_partitions_lines:
-            self.disk_list_system_ordered.append(line.split()[3].strip())
+            self.disk_list.append(line.split()[3].strip())
+        if sorted(self.disk_list) != sorted(self.disk_list_prev):
+            self.performance_set_selected_disk_func()
+        self.disk_list_prev = list(self.disk_list)
+        # Get disk read speed and disk write speed
         with open("/proc/diskstats") as reader:
             proc_diskstats_lines = reader.read().strip().split("\n")
+        selected_disk = self.disk_list[self.selected_disk_number]
         for line in proc_diskstats_lines:
-            if line.split()[2] in self.disk_list_system_ordered:
-                # Disk information of some disks (such a loop devices) exist in "/proc/diskstats" file even if these devices are unmounted. "proc_diskstats_lines_filtered" list is used in order to use disk list without these remaining information.
-                proc_diskstats_lines_filtered.append(line)
-        disk_list_prev = self.disk_list[:]
-        for i, disk in enumerate(self.disk_list_system_ordered):
-            if disk not in self.disk_list:
-                self.disk_list.append(disk)
-                disk_data = proc_diskstats_lines[i].split()
-                disk_read_data = int(disk_data[5]) * self.disk_sector_size
-                disk_write_data = int(disk_data[9]) * self.disk_sector_size
-                self.disk_read_data_prev.append(disk_read_data)
-                self.disk_write_data_prev.append(disk_write_data)
-                self.disk_read_speed.append([0] * self.chart_data_history)
-                self.disk_write_speed.append([0] * self.chart_data_history)
-        for disk in reversed(self.disk_list[:]):
-            if disk not in self.disk_list_system_ordered:
-                disk_index_to_remove = self.disk_list.index(disk)
-                del self.disk_read_data_prev[disk_index_to_remove]
-                del self.disk_write_data_prev[disk_index_to_remove]
-                del self.disk_read_speed[disk_index_to_remove]
-                del self.disk_write_speed[disk_index_to_remove]
-                self.disk_list.remove(disk)
-        if disk_list_prev != self.disk_list:
-            self.performance_set_selected_disk_func()
-        # Get disk_read_speed, disk_write_speed
-        self.disk_read_data = []
-        self.disk_write_data = []
-        for i, disk in enumerate(self.disk_list):
-            disk_data = proc_diskstats_lines_filtered[self.disk_list_system_ordered.index(disk)].split()
-            self.disk_read_data.append(int(disk_data[5]) * self.disk_sector_size)
-            self.disk_write_data.append(int(disk_data[9]) * self.disk_sector_size)
-            self.disk_read_speed[i].append((self.disk_read_data[-1] - self.disk_read_data_prev[i]) / Config.update_interval)
-            self.disk_write_speed[i].append((self.disk_write_data[-1] - self.disk_write_data_prev[i]) / Config.update_interval)
-            del self.disk_read_speed[i][0]
-            del self.disk_write_speed[i][0]
-        self.disk_read_data_prev = list(self.disk_read_data)
-        self.disk_write_data_prev = list(self.disk_write_data)
+            line_split = line.split()
+            if line_split[2] == selected_disk:
+                disk_read_data = int(line_split[5]) * self.disk_sector_size
+                disk_write_data = int(line_split[9]) * self.disk_sector_size
+                self.disk_read_speed = (disk_read_data - self.disk_read_data_prev) / Config.update_interval
+                self.disk_write_speed = (disk_write_data - self.disk_write_data_prev) / Config.update_interval
+        if self.selected_disk_prev != selected_disk:
+            self.disk_read_speed = 0
+            self.disk_write_speed = 0
+        if self.disk_read_data_prev == 0 or self.disk_write_data_prev == 0:
+            self.disk_read_speed = 0
+            self.disk_write_speed = 0
+        self.disk_read_data_prev = disk_read_data
+        self.disk_write_data_prev = disk_write_data
+        self.selected_disk_prev = selected_disk
 
         # Get network card list
-        self.network_card_list_system_ordered = []
         with open("/proc/net/dev") as reader:
             proc_net_dev_lines = reader.read().strip().split("\n")[2:]
+        self.network_card_list = []
         for line in proc_net_dev_lines:
-            self.network_card_list_system_ordered.append(line.split(":", 1)[0].strip())
-        network_card_list_prev = self.network_card_list[:]
-        for i, network_card in enumerate(self.network_card_list_system_ordered):
-            if network_card not in self.network_card_list:
-                self.network_card_list.append(network_card)
-                network_data = proc_net_dev_lines[i].split()
-                self.network_receive_bytes = int(network_data[1])
-                self.network_send_bytes = int(network_data[9])
-                self.network_receive_bytes_prev.append(self.network_receive_bytes)
-                self.network_send_bytes_prev.append(self.network_send_bytes)
-                self.network_receive_speed.append([0] * self.chart_data_history)
-                self.network_send_speed.append([0] * self.chart_data_history)
-        for network_card in reversed(self.network_card_list[:]):
-            if network_card not in self.network_card_list_system_ordered:
-                network_card_index_to_remove = self.network_card_list.index(network_card)
-                del self.network_receive_bytes_prev[network_card_index_to_remove]
-                del self.network_send_bytes_prev[network_card_index_to_remove]
-                del self.network_receive_speed[network_card_index_to_remove]
-                del self.network_send_speed[network_card_index_to_remove]
-                self.network_card_list.remove(network_card)
-        #if network_card_list_prev != self.network_card_list:
+            self.network_card_list.append(line.split(":", 1)[0].strip())
         self.performance_set_selected_network_card_func()
-        # Get network_receive_speed, network_send_speed
-        self.network_receive_bytes = []
-        self.network_send_bytes = []
-        for i, network_card in enumerate(self.network_card_list):
-            network_data = proc_net_dev_lines[self.network_card_list_system_ordered.index(network_card)].split()
-            self.network_receive_bytes.append(int(network_data[1]))
-            self.network_send_bytes.append(int(network_data[9]))
-            self.network_receive_speed[i].append((self.network_receive_bytes[-1] - self.network_receive_bytes_prev[i]) / Config.update_interval)
-            self.network_send_speed[i].append((self.network_send_bytes[-1] - self.network_send_bytes_prev[i]) / Config.update_interval)
-            del self.network_receive_speed[i][0]
-            del self.network_send_speed[i][0]
-        self.network_receive_bytes_prev = list(self.network_receive_bytes)
-        self.network_send_bytes_prev = list(self.network_send_bytes)
+        self.network_card_list_prev = list(self.network_card_list)
+        # Get network card download speed and network card upload speed
+        selected_network_card = self.network_card_list[self.selected_network_card_number]
+        for line in proc_net_dev_lines:
+            line_split = line.split()
+            if line_split[0].strip(":") == selected_network_card:
+                network_receive_bytes = int(line_split[1])
+                network_send_bytes = int(line_split[9])
+                self.network_receive_speed = (network_receive_bytes - self.network_receive_bytes_prev) / Config.update_interval
+                self.network_send_speed = (network_send_bytes - self.network_send_bytes_prev) / Config.update_interval
+        if self.selected_network_card_prev != selected_network_card:
+            self.network_receive_speed = 0
+            self.network_send_speed = 0
+        if self.network_receive_bytes_prev == 0 or self.network_send_bytes_prev == 0:
+            self.network_receive_speed = 0
+            self.network_send_speed = 0
+        self.network_receive_bytes_prev = network_receive_bytes
+        self.network_send_bytes_prev = network_send_bytes
+        self.selected_network_card_prev = selected_network_card
 
 
     def performance_summary_chart_draw_func(self):
@@ -502,17 +457,17 @@ class Performance:
         processes_number_text = self.cpu_system_up_time_func()
         swap_usage_text = f'{self.swap_usage_percent:.0f}%'
         selected_disk_number = self.selected_disk_number
-        performance_disk_data_precision = 1
+        performance_disk_data_precision = Config.performance_disk_data_precision
         performance_disk_data_unit = Config.performance_disk_data_unit
         performance_disk_speed_bit = Config.performance_disk_speed_bit
-        disk_read_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_disk_speed_bit, self.disk_read_speed[selected_disk_number][-1], performance_disk_data_unit, performance_disk_data_precision)}/s'
-        disk_write_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_disk_speed_bit, self.disk_write_speed[selected_disk_number][-1], performance_disk_data_unit, performance_disk_data_precision)}/s'
+        disk_read_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_disk_speed_bit, self.disk_read_speed, performance_disk_data_unit, performance_disk_data_precision)}/s'
+        disk_write_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_disk_speed_bit, self.disk_write_speed, performance_disk_data_unit, performance_disk_data_precision)}/s'
         selected_network_card_number = self.selected_network_card_number
-        performance_network_data_precision = 1
+        performance_network_data_precision = Config.performance_network_data_precision
         performance_network_data_unit = Config.performance_network_data_unit
         performance_network_speed_bit = Config.performance_network_speed_bit
-        network_download_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_network_speed_bit, self.network_receive_speed[selected_network_card_number][-1], performance_network_data_unit, performance_network_data_precision)}/s'
-        network_upload_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_network_speed_bit, self.network_send_speed[selected_network_card_number][-1], performance_network_data_unit, performance_network_data_precision)}/s'
+        network_download_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_network_speed_bit, self.network_receive_speed, performance_network_data_unit, performance_network_data_precision)}/s'
+        network_upload_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_network_speed_bit, self.network_send_speed, performance_network_data_unit, performance_network_data_precision)}/s'
 
 
         # Set antialiasing level as "BEST" in order to avoid low quality chart line because of the highlight effect (more than one line will be overlayed for this appearance).
@@ -1355,7 +1310,7 @@ class Performance:
         ctx.restore()
 
         # Draw "selected disk name" label on the lower-right side of the graph.
-        selected_disk = self.disk_list_system_ordered[self.selected_disk_number]
+        selected_disk = self.disk_list[self.selected_disk_number]
         selected_disk_text = "Disk: " + selected_disk
         ctx.set_font_size(gauge_disk_network_label_text_size)
         ctx.move_to(frame_width - 160, frame_height - 21)
