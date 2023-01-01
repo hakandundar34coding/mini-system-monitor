@@ -13,11 +13,36 @@ import os
 import time
 
 
-class Config:
+class MainWindow:
 
     def __init__(self):
 
+        # Get settings
         self.config_default_func()
+
+        # Define variables for unit converter
+        self.performance_define_data_unit_converter_variables_func()
+
+        # Main window
+        self.main_window = tk.Tk()
+        self.main_window.geometry(self.remember_window_size)
+        # Disable window sizing in x and y directions.
+        self.main_window.resizable(False, False)
+        self.main_window.title("Mini System Monitor")
+        self.application_icon = tk.PhotoImage(file=os.path.dirname(os.path.realpath(__file__)) + "/../icons/mini-system-monitor.png")
+        # "True" is used in order to use same window icon for other windows of the application.
+        self.main_window.iconphoto(True, self.application_icon)
+        self.main_window.rowconfigure(0, minsize=1, weight=1)
+        self.main_window.columnconfigure(0, minsize=1, weight=1)
+
+        # Main window GUI objects
+        self.main_window_gui_objects()
+
+        # Run function after window is shown
+        self.main_window.after_idle(self.main_window_show_func)
+
+        # Start main loop for keeping the window on the screen.
+        self.main_window.mainloop()
 
 
     def config_default_func(self):
@@ -43,36 +68,6 @@ class Config:
         self.selected_network_card = ""
 
 
-class MainWindow:
-
-    def __init__(self):
-
-        # Read settings
-        global Config
-        Config = Config()
-
-        # Main window
-        self.main_window = tk.Tk()
-        self.main_window.geometry(Config.remember_window_size)
-        # Disable window sizing in x and y directions.
-        self.main_window.resizable(False, False)
-        self.main_window.title("Mini System Monitor")
-        self.application_icon = tk.PhotoImage(file=os.path.dirname(os.path.realpath(__file__)) + "/../icons/mini-system-monitor.png")
-        # "True" is used in order to use same window icon for other windows of the application.
-        self.main_window.iconphoto(True, self.application_icon)
-        self.main_window.rowconfigure(0, minsize=1, weight=1)
-        self.main_window.columnconfigure(0, minsize=1, weight=1)
-
-        # Main window GUI objects
-        self.main_window_gui_objects()
-
-        # Run function after window is shown
-        self.main_window.after_idle(self.main_window_show_func)
-
-        # Start main loop for keeping the window on the screen.
-        self.main_window.mainloop()
-
-
     def main_window_gui_objects(self):
         """
         Main window GUI objects
@@ -93,7 +88,7 @@ class MainWindow:
         self.graphics_label.grid(row=1, column=0, sticky="nsew")
 
         # Surface (for showing Cairo context)
-        window_size = Config.remember_window_size.split("x")
+        window_size = self.remember_window_size.split("x")
         self.surface1 = ImageSurface(FORMAT_ARGB32, int(window_size[0]), int(window_size[1]))
         # Cairo Context (for drawing graphics)
         self.context1 = Context(self.surface1)
@@ -101,23 +96,13 @@ class MainWindow:
         self.graphics_label.update()
 
 
-    def about_button_func(self):
-        """
-        Show "About" window.
-        """
-
-        self.about_window = AboutWindow(self.main_window, self.application_icon)
-
-
     def main_window_show_func(self):
         """
         Run code after the main window is shown.
         """
 
-        # Run "Performance" module in order to provide performance data to graphics.
-        global Performance
-        Performance = Performance(self)
-        Performance.performance_background_initial_func()
+        # Run performance initial function in order to provide performance data to graphics.
+        self.performance_background_initial_func()
 
         # Start loop function
         self.main_gui_tab_loop_func()
@@ -128,43 +113,29 @@ class MainWindow:
         Repeat running the functions.
         """
 
-        Performance.performance_background_loop_func()
+        self.performance_background_loop_func()
 
-        Performance.performance_summary_chart_draw_func()
+        self.performance_summary_chart_draw_func()
 
-        self.main_window.after(int(Config.update_interval*1000), self.main_gui_tab_loop_func)
+        self.main_window.after(int(self.update_interval*1000), self.main_gui_tab_loop_func)
 
 
-class AboutWindow:
-
-    def __init__(self, main_window, application_icon):
-
-        global webbrowser, tkFont
+    def about_button_func(self):
+        """
+        Generate and show "About" window.
+        """
 
         import webbrowser
         import tkinter.font as tkFont
 
-        # Get main window and icon of the application.
-        self.main_window = main_window
-        self.application_icon = application_icon
-
         # Window (About)
-        self.about_window = tk.Toplevel(self.main_window)
+        about_window = tk.Toplevel(self.main_window)
         # Keep the window on top of the main window
-        self.about_window.wm_transient(self.main_window)
+        about_window.wm_transient(self.main_window)
         # Prevent usage of the main window
-        self.about_window.grab_set()
-        self.about_window.resizable(False, False)
-        self.about_window.title("About")
-
-        # "About" window GUI objects
-        self.about_window_gui_objects()
-
-
-    def about_window_gui_objects(self):
-        """
-        Settings window GUI objects
-        """
+        about_window.grab_set()
+        about_window.resizable(False, False)
+        about_window.title("About")
 
         # Get software version
         try:
@@ -173,30 +144,34 @@ class AboutWindow:
             software_version = "-"
 
         # Main Frame
-        main_frame = tk.Frame(self.about_window)
+        main_frame = tk.Frame(about_window)
         main_frame.rowconfigure(0, minsize=1, weight=1)
         main_frame.columnconfigure(0, minsize=1, weight=1)
         main_frame.grid(row=0, column=0, sticky="nsew", padx=1, pady=1)
 
-        # Image
+        # Label (application image)
         image_label = tk.Label(main_frame, image=self.application_icon)
         image_label.grid(row=0, column=0, sticky="ns", padx=10, pady=10)
 
-        # Labels
+        # Label (application name)
         name_label = tk.Label(main_frame, text="Mini System Monitor", font=("bold"))
         name_label.grid(row=1, column=0, sticky="ns", padx=0, pady=0)
 
+        # Label (application version)
         version_label = tk.Label(main_frame, text=software_version)
         version_label.grid(row=2, column=0, sticky="ns", padx=0, pady=4)
 
+        # Frame (description labels)
         smc_frame = tk.Frame(main_frame)
         smc_frame.rowconfigure(0, minsize=1, weight=1)
         smc_frame.columnconfigure(0, minsize=1, weight=1)
         smc_frame.grid(row=3, column=0, sticky="ns", padx=1, pady=1)
 
+        # Label (description)
         smc_label1 = tk.Label(smc_frame, text="Mini version of")
         smc_label1.grid(row=0, column=0, sticky="ns", padx=0, pady=5)
 
+        # Label (description)
         smc_label2 = tk.Label(smc_frame, text="System Monitoring Center", fg="blue", cursor="hand2")
         smc_label2.grid(row=0, column=1, sticky="ns", padx=0, pady=3)
         smc_label2.bind("<Button-1>", lambda e:webbrowser.open_new("https://github.com/hakandundar34coding/system-monitoring-center"))
@@ -204,6 +179,7 @@ class AboutWindow:
         label_font.configure(underline = True)
         smc_label2.configure(font=label_font)
 
+        # Label (web page)
         web_page_label = tk.Label(main_frame, text="Web Page", fg="blue", cursor="hand2")
         web_page_label.grid(row=4, column=0, sticky="ns", padx=0, pady=0)
         web_page_label.bind("<Button-1>", lambda e:webbrowser.open_new("https://github.com/hakandundar34coding/mini-system-monitor"))
@@ -211,27 +187,21 @@ class AboutWindow:
         label_font.configure(underline = True)
         web_page_label.configure(font=label_font)
 
+        # Label (copyright)
         copyright_label = tk.Label(main_frame, text="© 2023 Hakan Dündar")
         copyright_label.grid(row=5, column=0, sticky="ns", padx=0, pady=4)
 
+        # Label (license)
         license_label = tk.Label(main_frame, text="This program comes with absolutely no warranty.\nSee the GNU General Public License, version 3 or later for details.")
         license_label.grid(row=6, column=0, sticky="ns", padx=0, pady=0)
 
+        # Label (license link)
         license_link_label = tk.Label(main_frame, text="GPLv3", fg="blue", cursor="hand2")
         license_link_label.grid(row=7, column=0, sticky="ns")
         license_link_label.bind("<Button-1>", lambda e:webbrowser.open_new("https://www.gnu.org/licenses/gpl-3.0.html"))
         label_font = tkFont.Font(license_link_label, license_link_label.cget("font"))
         label_font.configure(underline = True)
         license_link_label.configure(font=label_font)
-
-
-class Performance:
-
-    def __init__(self, MainWindow):
-
-        self.performance_define_data_unit_converter_variables_func()
-
-        self.MainWindow = MainWindow
 
 
     def performance_set_selected_disk_func(self):
@@ -262,8 +232,8 @@ class Performance:
                 disk_uuid_partuuid = proc_cmdline.split("root=PARTUUID=", 1)[1].split(" ", 1)[0].strip()
                 system_disk_list.append(os.path.realpath(f'/dev/disk/by-partuuid/{disk_uuid_partuuid}').split("/")[-1].strip())
 
-        if Config.selected_disk in self.disk_list:
-            selected_disk = Config.selected_disk
+        if self.selected_disk in self.disk_list:
+            selected_disk = self.selected_disk
         else:
             if system_disk_list != []:
                 selected_disk = system_disk_list[0]
@@ -297,10 +267,10 @@ class Performance:
         else:
             selected_network_card = self.network_card_list[0]
         # "" is predefined network card name before release of the software. This statement is used in order to avoid error, if no network card selection is made since first run of the software.
-        if Config.selected_network_card == "":
+        if self.selected_network_card == "":
             selected_network_card_number = self.network_card_list.index(selected_network_card)
-        if Config.selected_network_card in self.network_card_list:
-            selected_network_card_number = self.network_card_list.index(Config.selected_network_card)
+        if self.selected_network_card in self.network_card_list:
+            selected_network_card_number = self.network_card_list.index(self.selected_network_card)
         else:
             selected_network_card_number = self.network_card_list.index(selected_network_card)
 
@@ -439,10 +409,10 @@ class Performance:
         Draw graphics.
         """
 
-        # Get widgets from MainWindow.
-        widget = self.MainWindow.graphics_label
-        ctx = self.MainWindow.context1
-        surface1 = self.MainWindow.surface1
+        # Get widgets.
+        widget = self.graphics_label
+        ctx = self.context1
+        surface1 = self.surface1
 
         # Get drawingarea size.
         widget.update()
@@ -453,10 +423,10 @@ class Performance:
         ctx = Context(surface1)
 
         # Get chart colors of performance tab sub-tab charts.
-        chart_line_color_cpu_percent = Config.chart_line_color_cpu_percent
-        chart_line_color_memory_percent = Config.chart_line_color_memory_percent
-        chart_line_color_disk_speed_usage = Config.chart_line_color_disk_speed_usage
-        chart_line_color_network_speed_data = Config.chart_line_color_network_speed_data
+        chart_line_color_cpu_percent = self.chart_line_color_cpu_percent
+        chart_line_color_memory_percent = self.chart_line_color_memory_percent
+        chart_line_color_disk_speed_usage = self.chart_line_color_disk_speed_usage
+        chart_line_color_network_speed_data = self.chart_line_color_network_speed_data
 
         # Get performance data and set text format.
         performance_cpu_usage_percent_precision = 0
@@ -466,15 +436,15 @@ class Performance:
         processes_number_text = self.cpu_system_up_time_func()
         swap_usage_text = f'{self.swap_usage_percent:.0f}%'
         selected_disk_number = self.selected_disk_number
-        performance_disk_data_precision = Config.performance_disk_data_precision
-        performance_disk_data_unit = Config.performance_disk_data_unit
-        performance_disk_speed_bit = Config.performance_disk_speed_bit
+        performance_disk_data_precision = self.performance_disk_data_precision
+        performance_disk_data_unit = self.performance_disk_data_unit
+        performance_disk_speed_bit = self.performance_disk_speed_bit
         disk_read_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_disk_speed_bit, self.disk_read_speed, performance_disk_data_unit, performance_disk_data_precision)}/s'
         disk_write_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_disk_speed_bit, self.disk_write_speed, performance_disk_data_unit, performance_disk_data_precision)}/s'
         selected_network_card_number = self.selected_network_card_number
-        performance_network_data_precision = Config.performance_network_data_precision
-        performance_network_data_unit = Config.performance_network_data_unit
-        performance_network_speed_bit = Config.performance_network_speed_bit
+        performance_network_data_precision = self.performance_network_data_precision
+        performance_network_data_unit = self.performance_network_data_unit
+        performance_network_speed_bit = self.performance_network_speed_bit
         network_download_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_network_speed_bit, self.network_receive_speed, performance_network_data_unit, performance_network_data_precision)}/s'
         network_upload_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_network_speed_bit, self.network_send_speed, performance_network_data_unit, performance_network_data_precision)}/s'
 
