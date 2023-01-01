@@ -135,7 +135,7 @@ class MainWindow:
         self.main_window.after(int(Config.update_interval*1000), self.main_gui_tab_loop_func)
 
 
-class AboutWindow():
+class AboutWindow:
 
     def __init__(self, main_window, application_icon):
 
@@ -149,13 +149,13 @@ class AboutWindow():
         self.application_icon = application_icon
 
         # Window (About)
-        self.window1001 = tk.Toplevel(self.main_window)
+        self.about_window = tk.Toplevel(self.main_window)
         # Keep the window on top of the main window
-        self.window1001.wm_transient(self.main_window)
+        self.about_window.wm_transient(self.main_window)
         # Prevent usage of the main window
-        self.window1001.grab_set()
-        self.window1001.resizable(False, False)
-        self.window1001.title("About")
+        self.about_window.grab_set()
+        self.about_window.resizable(False, False)
+        self.about_window.title("About")
 
         # "About" window GUI objects
         self.about_window_gui_objects()
@@ -170,10 +170,10 @@ class AboutWindow():
         try:
             software_version = open(os.path.dirname(os.path.abspath(__file__)) + "/__version__").readline()
         except Exception:
-            pass
+            software_version = "-"
 
         # Main Frame
-        main_frame = tk.Frame(self.window1001)
+        main_frame = tk.Frame(self.about_window)
         main_frame.rowconfigure(0, minsize=1, weight=1)
         main_frame.columnconfigure(0, minsize=1, weight=1)
         main_frame.grid(row=0, column=0, sticky="nsew", padx=1, pady=1)
@@ -478,12 +478,6 @@ class Performance:
         network_download_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_network_speed_bit, self.network_receive_speed, performance_network_data_unit, performance_network_data_precision)}/s'
         network_upload_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_network_speed_bit, self.network_send_speed, performance_network_data_unit, performance_network_data_precision)}/s'
 
-
-        # Set antialiasing level as "BEST" in order to avoid low quality chart line because of the highlight effect (more than one line will be overlayed for this appearance).
-        ctx.set_antialias(cairo.Antialias.BEST)
-
-        # Set line joining style as "LINE_JOIN_ROUND" in order to avoid spikes at the line joints due to high antialiasing level.
-        ctx.set_line_join(cairo.LINE_JOIN_ROUND)
 
         # Define pi number
         pi_number = 3.14159
