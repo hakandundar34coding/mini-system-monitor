@@ -13,9 +13,6 @@ import os
 import time
 
 
-SOFTWARE_VERSION = "1.4.0"
-
-
 class MainWindow:
 
     def __init__(self):
@@ -140,6 +137,12 @@ class MainWindow:
         about_window.resizable(False, False)
         about_window.title("About")
 
+        # Get software version
+        try:
+            software_version = open(os.path.dirname(os.path.abspath(__file__)) + "/__version__").readline()
+        except Exception:
+            software_version = "-"
+
         # Main Frame
         main_frame = tk.Frame(about_window)
         main_frame.rowconfigure(0, minsize=1, weight=1)
@@ -155,7 +158,7 @@ class MainWindow:
         name_label.grid(row=1, column=0, sticky="ns", padx=0, pady=0)
 
         # Label (application version)
-        version_label = tk.Label(main_frame, text=SOFTWARE_VERSION)
+        version_label = tk.Label(main_frame, text=software_version)
         version_label.grid(row=2, column=0, sticky="ns", padx=0, pady=4)
 
         # Frame (description labels)
