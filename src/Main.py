@@ -13,6 +13,9 @@ import os
 import time
 
 
+SOFTWARE_VERSION = "1.4.0"
+
+
 class MainWindow:
 
     def __init__(self):
@@ -20,23 +23,11 @@ class MainWindow:
         # Get settings
         self.config_default_func()
 
+        # Main window GUI
+        self.main_window_gui_objects()
+
         # Define variables for unit converter
         self.performance_define_data_unit_converter_variables_func()
-
-        # Main window
-        self.main_window = tk.Tk()
-        self.main_window.geometry(self.remember_window_size)
-        # Disable window sizing in x and y directions.
-        self.main_window.resizable(False, False)
-        self.main_window.title("Mini System Monitor")
-        self.application_icon = tk.PhotoImage(file=os.path.dirname(os.path.realpath(__file__)) + "/../icons/mini-system-monitor.png")
-        # "True" is used in order to use same window icon for other windows of the application.
-        self.main_window.iconphoto(True, self.application_icon)
-        self.main_window.rowconfigure(0, minsize=1, weight=1)
-        self.main_window.columnconfigure(0, minsize=1, weight=1)
-
-        # Main window GUI objects
-        self.main_window_gui_objects()
 
         # Run function after window is shown
         self.main_window.after_idle(self.main_window_show_func)
@@ -70,8 +61,20 @@ class MainWindow:
 
     def main_window_gui_objects(self):
         """
-        Main window GUI objects
+        Generate main window GUI
         """
+
+        # Main window
+        self.main_window = tk.Tk()
+        self.main_window.geometry(self.remember_window_size)
+        # Disable window sizing in x and y directions.
+        self.main_window.resizable(False, False)
+        self.main_window.title("Mini System Monitor")
+        self.application_icon = tk.PhotoImage(file=os.path.dirname(os.path.realpath(__file__)) + "/../icons/mini-system-monitor.png")
+        # "True" is used in order to use same window icon for other windows of the application.
+        self.main_window.iconphoto(True, self.application_icon)
+        self.main_window.rowconfigure(0, minsize=1, weight=1)
+        self.main_window.columnconfigure(0, minsize=1, weight=1)
 
         # Main Frame
         main_frame = tk.Frame(self.main_window)
@@ -137,12 +140,6 @@ class MainWindow:
         about_window.resizable(False, False)
         about_window.title("About")
 
-        # Get software version
-        try:
-            software_version = open(os.path.dirname(os.path.abspath(__file__)) + "/__version__").readline()
-        except Exception:
-            software_version = "-"
-
         # Main Frame
         main_frame = tk.Frame(about_window)
         main_frame.rowconfigure(0, minsize=1, weight=1)
@@ -158,7 +155,7 @@ class MainWindow:
         name_label.grid(row=1, column=0, sticky="ns", padx=0, pady=0)
 
         # Label (application version)
-        version_label = tk.Label(main_frame, text=software_version)
+        version_label = tk.Label(main_frame, text=SOFTWARE_VERSION)
         version_label.grid(row=2, column=0, sticky="ns", padx=0, pady=4)
 
         # Frame (description labels)
