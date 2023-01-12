@@ -17,26 +17,14 @@ class MainWindow:
 
     def __init__(self):
 
-        # Get settings
-        self.config_default_func()
-
-        # Main window GUI
-        self.main_window_gui_objects()
-
-        # Define variables for unit converter
-        self.performance_define_data_unit_converter_variables_func()
-
-        # Run function after window is shown
-        self.main_window.after_idle(self.main_window_show_func)
-
-        # Start main loop for keeping the window on the screen.
+        self.config_default()
+        self.main_window_gui()
+        self.performance_background_initial_func()
+        self.performance_loop_func()
         self.main_window.mainloop()
 
 
-    def config_default_func(self):
-        """
-        Get settings.
-        """
+    def config_default(self):
 
         self.update_interval = 0.75
         self.remember_window_size = "530x420"
@@ -56,10 +44,7 @@ class MainWindow:
         self.selected_network_card = ""
 
 
-    def main_window_gui_objects(self):
-        """
-        Generate main window GUI
-        """
+    def main_window_gui(self):
 
         # Main window
         self.main_window = tk.Tk()
@@ -70,21 +55,15 @@ class MainWindow:
         self.application_icon = tk.PhotoImage(file=os.path.dirname(os.path.realpath(__file__)) + "/../icons/mini-system-monitor.png")
         # "True" is used in order to use same window icon for other windows of the application.
         self.main_window.iconphoto(True, self.application_icon)
-        self.main_window.rowconfigure(0, minsize=1, weight=1)
+        self.main_window.rowconfigure(1, minsize=1, weight=1)
         self.main_window.columnconfigure(0, minsize=1, weight=1)
 
-        # Main Frame
-        main_frame = tk.Frame(self.main_window)
-        main_frame.rowconfigure(1, minsize=1, weight=1)
-        main_frame.columnconfigure(0, minsize=1, weight=1)
-        main_frame.grid(row=0, column=0, sticky="nsew", padx=0, pady=0)
-
         # Button (About)
-        self.about_button = tk.Button(main_frame, text="About", width=5, height=1, command=self.about_button_func)
+        self.about_button = tk.Button(self.main_window, text="About", width=5, height=1, command=self.about_window_gui)
         self.about_button.grid(row=0, column=0, sticky="ew")
 
         # Label (for showing graphics)
-        self.graphics_label = tk.Label(main_frame)
+        self.graphics_label = tk.Label(self.main_window)
         self.graphics_label.grid(row=1, column=0, sticky="nsew")
 
         # Surface (for showing Cairo context)
@@ -92,38 +71,9 @@ class MainWindow:
         self.surface1 = ImageSurface(FORMAT_ARGB32, int(window_size[0]), int(window_size[1]))
         # Cairo Context (for drawing graphics)
         self.context1 = Context(self.surface1)
-        # Update label for showing graphics faster on start.
-        self.graphics_label.update()
 
 
-    def main_window_show_func(self):
-        """
-        Run code after the main window is shown.
-        """
-
-        # Run performance initial function in order to provide performance data to graphics.
-        self.performance_background_initial_func()
-
-        # Start loop function
-        self.main_gui_tab_loop_func()
-
-
-    def main_gui_tab_loop_func(self):
-        """
-        Repeat running the functions.
-        """
-
-        self.performance_background_loop_func()
-
-        self.performance_summary_chart_draw_func()
-
-        self.main_window.after(int(self.update_interval*1000), self.main_gui_tab_loop_func)
-
-
-    def about_button_func(self):
-        """
-        Generate and show "About" window.
-        """
+    def about_window_gui(self):
 
         import webbrowser
         import tkinter.font as tkFont
@@ -143,26 +93,20 @@ class MainWindow:
         except Exception:
             software_version = "-"
 
-        # Main Frame
-        main_frame = tk.Frame(about_window)
-        main_frame.rowconfigure(0, minsize=1, weight=1)
-        main_frame.columnconfigure(0, minsize=1, weight=1)
-        main_frame.grid(row=0, column=0, sticky="nsew", padx=1, pady=1)
-
         # Label (application image)
-        image_label = tk.Label(main_frame, image=self.application_icon)
+        image_label = tk.Label(about_window, image=self.application_icon)
         image_label.grid(row=0, column=0, sticky="ns", padx=10, pady=10)
 
         # Label (application name)
-        name_label = tk.Label(main_frame, text="Mini System Monitor", font=("bold"))
+        name_label = tk.Label(about_window, text="Mini System Monitor", font=("bold"))
         name_label.grid(row=1, column=0, sticky="ns", padx=0, pady=0)
 
         # Label (application version)
-        version_label = tk.Label(main_frame, text=software_version)
+        version_label = tk.Label(about_window, text=software_version)
         version_label.grid(row=2, column=0, sticky="ns", padx=0, pady=4)
 
         # Frame (description labels)
-        smc_frame = tk.Frame(main_frame)
+        smc_frame = tk.Frame(about_window)
         smc_frame.rowconfigure(0, minsize=1, weight=1)
         smc_frame.columnconfigure(0, minsize=1, weight=1)
         smc_frame.grid(row=3, column=0, sticky="ns", padx=1, pady=1)
@@ -180,7 +124,7 @@ class MainWindow:
         smc_label2.configure(font=label_font)
 
         # Label (web page)
-        web_page_label = tk.Label(main_frame, text="Web Page", fg="blue", cursor="hand2")
+        web_page_label = tk.Label(about_window, text="Web Page", fg="blue", cursor="hand2")
         web_page_label.grid(row=4, column=0, sticky="ns", padx=0, pady=0)
         web_page_label.bind("<Button-1>", lambda e:webbrowser.open_new("https://github.com/hakandundar34coding/mini-system-monitor"))
         label_font = tkFont.Font(web_page_label, web_page_label.cget("font"))
@@ -188,15 +132,15 @@ class MainWindow:
         web_page_label.configure(font=label_font)
 
         # Label (copyright)
-        copyright_label = tk.Label(main_frame, text="© 2023 Hakan Dündar")
+        copyright_label = tk.Label(about_window, text="© 2023 Hakan Dündar")
         copyright_label.grid(row=5, column=0, sticky="ns", padx=0, pady=4)
 
         # Label (license)
-        license_label = tk.Label(main_frame, text="This program comes with absolutely no warranty.\nSee the GNU General Public License, version 3 or later for details.")
-        license_label.grid(row=6, column=0, sticky="ns", padx=0, pady=0)
+        license_label = tk.Label(about_window, text="This program comes with absolutely no warranty.\nSee the GNU General Public License, version 3 or later for details.")
+        license_label.grid(row=6, column=0, sticky="ns", padx=1, pady=0)
 
         # Label (license link)
-        license_link_label = tk.Label(main_frame, text="GPLv3", fg="blue", cursor="hand2")
+        license_link_label = tk.Label(about_window, text="GPLv3", fg="blue", cursor="hand2")
         license_link_label.grid(row=7, column=0, sticky="ns")
         license_link_label.bind("<Button-1>", lambda e:webbrowser.open_new("https://www.gnu.org/licenses/gpl-3.0.html"))
         label_font = tkFont.Font(license_link_label, license_link_label.cget("font"))
@@ -204,10 +148,14 @@ class MainWindow:
         license_link_label.configure(font=label_font)
 
 
+    def performance_loop_func(self):
+
+        self.performance_background_loop_func()
+        self.performance_graph_draw_func()
+        self.main_window.after(int(self.update_interval*1000), self.performance_loop_func)
+
+
     def performance_set_selected_disk_func(self):
-        """
-        Set selected disk.
-        """
 
         # Set selected disk
         with open("/proc/mounts") as reader:
@@ -239,7 +187,7 @@ class MainWindow:
                 selected_disk = system_disk_list[0]
             else:
                 selected_disk = self.disk_list[0]
-                # Try to not to set selected disk a loop, ram, zram disk in order to avoid errors if "hide_loop_ramdisk_zram_disks" option is enabled and performance data of all disks are plotted at the same time. loop device may be the first disk on some systems if they are run without installation.
+                # Try to not to set selected disk a loop, ram, zram disk. loop device may be the first disk on some systems if they are run without installation.
                 for disk in self.disk_list:
                     if disk.startswith("loop") == False and disk.startswith("ram") == False and disk.startswith("zram") == False:
                         selected_disk = disk
@@ -250,9 +198,6 @@ class MainWindow:
 
 
     def performance_set_selected_network_card_func(self):
-        """
-        Set selected network card.
-        """
 
         # Set selected network card
         connected_network_card_list = []
@@ -279,9 +224,6 @@ class MainWindow:
 
 
     def performance_background_initial_func(self):
-        """
-        Performance initial function.
-        """
 
         # Define initial values for CPU usage percent
         self.cpu_time_all_prev = 0
@@ -304,10 +246,6 @@ class MainWindow:
 
 
     def performance_background_loop_func(self):
-        """
-        Performance loop function.
-        Get CPU, memory, disk and network usage data.
-        """
 
         # Get average CPU usage
         with open("/proc/stat") as reader:
@@ -334,14 +272,13 @@ class MainWindow:
         # Get swap usage percent
         swap_total = int(memory_info.split("\nSwapTotal:", 1)[1].split("\n", 1)[0].split(" ")[-2].strip()) *1024
         swap_free = int(memory_info.split("\nSwapFree:", 1)[1].split("\n", 1)[0].split(" ")[-2].strip()) *1024
-        # Calculate values if swap memory exists.
         if swap_free != 0:
             swap_used = swap_total - swap_free
             self.swap_usage_percent = swap_used / swap_total * 100
         else:
             self.swap_usage_percent = 0
 
-        # Get time for calculating disk speeds and network card speeds.
+        # Get time for calculating disk and network card speeds.
         get_time = time.time()
 
         # Get disk_list
@@ -404,10 +341,7 @@ class MainWindow:
         self.get_time_prev = get_time
 
 
-    def performance_summary_chart_draw_func(self):
-        """
-        Draw graphics.
-        """
+    def performance_graph_draw_func(self):
 
         # Get widgets.
         widget = self.graphics_label
@@ -433,20 +367,20 @@ class MainWindow:
         cpu_usage_text = f'{self.cpu_usage_percent:.{performance_cpu_usage_percent_precision}f}'
         performance_memory_data_precision = 0
         ram_usage_text = f'{self.ram_usage_percent:.{performance_memory_data_precision}f}'
-        processes_number_text = self.cpu_system_up_time_func()
+        processes_number_text = self.system_up_time_func()
         swap_usage_text = f'{self.swap_usage_percent:.0f}%'
         selected_disk_number = self.selected_disk_number
         performance_disk_data_precision = self.performance_disk_data_precision
         performance_disk_data_unit = self.performance_disk_data_unit
         performance_disk_speed_bit = self.performance_disk_speed_bit
-        disk_read_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_disk_speed_bit, self.disk_read_speed, performance_disk_data_unit, performance_disk_data_precision)}/s'
-        disk_write_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_disk_speed_bit, self.disk_write_speed, performance_disk_data_unit, performance_disk_data_precision)}/s'
+        disk_read_speed_text = f'{self.unit_converter_func("speed", performance_disk_speed_bit, self.disk_read_speed, performance_disk_data_unit, performance_disk_data_precision)}/s'
+        disk_write_speed_text = f'{self.unit_converter_func("speed", performance_disk_speed_bit, self.disk_write_speed, performance_disk_data_unit, performance_disk_data_precision)}/s'
         selected_network_card_number = self.selected_network_card_number
         performance_network_data_precision = self.performance_network_data_precision
         performance_network_data_unit = self.performance_network_data_unit
         performance_network_speed_bit = self.performance_network_speed_bit
-        network_download_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_network_speed_bit, self.network_receive_speed, performance_network_data_unit, performance_network_data_precision)}/s'
-        network_upload_speed_text = f'{self.performance_data_unit_converter_func("speed", performance_network_speed_bit, self.network_send_speed, performance_network_data_unit, performance_network_data_precision)}/s'
+        network_download_speed_text = f'{self.unit_converter_func("speed", performance_network_speed_bit, self.network_receive_speed, performance_network_data_unit, performance_network_data_precision)}/s'
+        network_upload_speed_text = f'{self.unit_converter_func("speed", performance_network_speed_bit, self.network_send_speed, performance_network_data_unit, performance_network_data_precision)}/s'
 
 
         # Define pi number
@@ -784,7 +718,7 @@ class MainWindow:
         # Draw circular (partial) line on the left of the disk read/write labels on the right gauge.
         ctx.save()
         ctx.translate(gauge_circular_center_x, chart_height / 2)
-        start_angle = -31*pi_number/180
+        start_angle = -30.5*pi_number/180
         end_angle = -4*pi_number/180
 
         ctx.set_line_width(1.5)
@@ -798,7 +732,7 @@ class MainWindow:
         ctx.save()
         ctx.translate(gauge_circular_center_x, chart_height / 2)
         start_angle = 4*pi_number/180
-        end_angle = 31*pi_number/180
+        end_angle = 30.5*pi_number/180
 
         ctx.set_line_width(1.5)
         ctx.set_source_rgba(chart_line_color_network_speed_data[0], chart_line_color_network_speed_data[1], chart_line_color_network_speed_data[2], chart_line_color_network_speed_data[3])
@@ -1306,10 +1240,7 @@ class MainWindow:
         widget.image = image_ref
 
 
-    def cpu_system_up_time_func(self):
-        """
-        Get system up time.
-        """
+    def system_up_time_func(self):
 
         with open("/proc/uptime") as reader:
             sut_read = float(reader.read().split(" ")[0].strip())
@@ -1323,22 +1254,13 @@ class MainWindow:
         return system_up_time
 
 
-    def performance_define_data_unit_converter_variables_func(self):
+    def unit_converter_func(self, data_type, data_type_option, data, unit, precision):
         """
-        Define values for converting data units and setting value precision.
         Data unit options: 0: Bytes (ISO), 1: Bytes (IEC), 2: bits (ISO), 3: bits (IEC).
         """
 
-        self.data_unit_list = [[0, "B", "B", "b", "b"], [1, "KiB", "KB", "Kib", "Kb"], [2, "MiB", "MB", "Mib", "Mb"],
-                              [3, "GiB", "GB", "Gib", "Gb"], [4, "TiB", "TB", "Tib", "Tb"], [5, "PiB", "PB", "Pib", "Pb"]]
-
-
-    def performance_data_unit_converter_func(self, data_type, data_type_option, data, unit, precision):
-        """
-        Convert data units and set value precision.
-        """
-
-        data_unit_list = self.data_unit_list
+        data_unit_list = [[0, "B", "B", "b", "b"], [1, "KiB", "KB", "Kib", "Kb"], [2, "MiB", "MB", "Mib", "Mb"],
+                         [3, "GiB", "GB", "Gib", "Gb"], [4, "TiB", "TB", "Tib", "Tb"], [5, "PiB", "PB", "Pib", "Pb"]]
 
         if unit == 0:
             power_of_value = 1024
