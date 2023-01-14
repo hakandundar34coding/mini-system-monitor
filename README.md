@@ -1,7 +1,7 @@
 # Mini System Monitor
 
 <p align="center">
-    <img src="https://github.com/hakandundar34coding/mini-system-monitor/blob/master/icons/mini-system-monitor.svg" alt="image" width="100">
+    <img src="https://github.com/hakandundar34coding/mini-system-monitor/blob/master/mini-system-monitor.png" alt="image" width="100">
 </p>
 
 <p align="center">
