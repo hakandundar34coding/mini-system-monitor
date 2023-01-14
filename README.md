@@ -47,5 +47,5 @@ Dependencies for running from source code:
 
 
 ### Screenshots:
-![Mini System Monitor](screenshots/msm_screenshot.png)
+![Mini System Monitor](msm_screenshot.png)
 

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Mini System Monitor
+Exec=mini-system-monitor
+Icon=mini-system-monitor
+Type=Application
+Categories=System;
+

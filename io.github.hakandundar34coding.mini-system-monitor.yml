@@ -97,5 +97,5 @@ modules:
     sources:
       - type: git
         url: https://github.com/hakandundar34coding/mini-system-monitor.git
-        commit: 6816b1a8db52c61ec9353616ec194b7f24b0703e
+        commit: e51d25a2ccb560b28d268bf6827d2f89201a8466
 
