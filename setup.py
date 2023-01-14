@@ -5,8 +5,12 @@ import sys
 import shutil
 
 
-with open(os.path.dirname(os.path.realpath(__file__)) + "/src/__version__") as reader:
-    version = reader.read().strip()
+with open(os.path.dirname(os.path.realpath(__file__)) + "/Main.py") as reader:
+    file_content_lines = reader.read().strip().split("\n")
+
+for line in file_content_lines:
+    if line.startswith("SOFTWARE_VERSION") == True:
+        version = line.split("=")[1].strip(' "')
 
 
 def files_in_folder(folder):
@@ -34,16 +38,16 @@ if PREFIX == "/app":
 
     with open("mini-system-monitor") as reader:
         script_file_content = reader.read()
-    script_file_content = script_file_content.replace("/usr/share/mini-system-monitor/src/", "/app/share/mini-system-monitor/src/")
+    script_file_content = script_file_content.replace("/usr/share/mini-system-monitor/", "/app/share/mini-system-monitor/")
     script_file_content = script_file_content.replace("#!/usr/bin/env python3", "#!/usr/bin/python3")
     with open("mini-system-monitor", "w") as writer:
         writer.write(script_file_content)
 
     data_files = [
         ("/app/share/applications/", ["io.github.hakandundar34coding.mini-system-monitor.desktop"]),
-        ("/app/share/icons/128x128/scalable/apps/", ["io.github.hakandundar34coding.mini-system-monitor.png"]),
+        ("/app/share/icons/hicolor/128x128/apps/", ["io.github.hakandundar34coding.mini-system-monitor.png"]),
         ("/app/share/mini-system-monitor/", ["mini-system-monitor.png"]),
-        ("/app/share/mini-system-monitor/src/", ["Main.py"]),
+        ("/app/share/mini-system-monitor/", ["Main.py"]),
         ("/app/share/appdata/", ["io.github.hakandundar34coding.mini-system-monitor.appdata.xml"]),
         ("/app/bin/", ["mini-system-monitor"])
     ]
@@ -67,7 +71,7 @@ if PREFIX != "/app":
         ("/usr/share/applications/", ["io.github.hakandundar34coding.mini-system-monitor.desktop"]),
         ("/usr/share/icons/128x128/scalable/apps/", ["io.github.hakandundar34coding.mini-system-monitor.png"]),
         ("/usr/share/mini-system-monitor/", ["mini-system-monitor.png"]),
-        ("/usr/share/mini-system-monitor/src/", ["Main.py"]),
+        ("/usr/share/mini-system-monitor/", ["Main.py"]),
         ("/usr/bin/", ["mini-system-monitor"])
     ]
 

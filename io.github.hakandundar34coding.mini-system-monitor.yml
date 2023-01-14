@@ -95,7 +95,7 @@ modules:
     build-commands:
       - python3 setup.py install --flatpak --prefix=${FLATPAK_DEST}
     sources:
-      - type: git
-        url: https://github.com/hakandundar34coding/mini-system-monitor.git
-        commit: 14f5ab2a9d2462a78b3e0f32e9daed40a2939b0c
+      - type: dir
+        path: /home/asush/Masaüstü/DATA/files/python/mini-system-monitor/mini-system-monitor
+
 
