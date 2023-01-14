@@ -6,7 +6,7 @@
 
 <p align="center">
     <strong>
-        Mini version of <a href="https://github.com/hakandundar34coding/system-monitoring-center">'System Monitoring Center'</a>.
+        Mini version of <a href="https://github.com/hakandundar34coding/system-monitoring-center">System Monitoring Center</a>.
     </strong>
 </p>
 
