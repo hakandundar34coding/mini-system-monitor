@@ -2,22 +2,14 @@
 
 from setuptools import setup, find_packages, os
 import sys
-import shutil
 
 
-with open(os.path.dirname(os.path.realpath(__file__)) + "/Main.py") as reader:
+with open(os.path.dirname(os.path.realpath(__file__)) + "/mini-system-monitor") as reader:
     file_content_lines = reader.read().strip().split("\n")
 
 for line in file_content_lines:
     if line.startswith("SOFTWARE_VERSION") == True:
         version = line.split("=")[1].strip(' "')
-
-
-def files_in_folder(folder):
-    file_paths = []
-    for file in [filename for filename in os.listdir(folder)]:
-        file_paths.append(folder + file)
-    return file_paths
 
 
 PREFIX = "/usr"
@@ -28,7 +20,7 @@ if "--flatpak" in sys.argv:
 
 if PREFIX == "/app":
 
-    shutil.copy2("mini-system-monitor.png", "io.github.hakandundar34coding.mini-system-monitor.png")
+    os.rename("mini-system-monitor.png", "io.github.hakandundar34coding.mini-system-monitor.png")
 
     with open("io.github.hakandundar34coding.mini-system-monitor.desktop") as reader:
         desktop_file_content = reader.read()
@@ -38,7 +30,6 @@ if PREFIX == "/app":
 
     with open("mini-system-monitor") as reader:
         script_file_content = reader.read()
-    script_file_content = script_file_content.replace("/usr/share/mini-system-monitor/", "/app/share/mini-system-monitor/")
     script_file_content = script_file_content.replace("#!/usr/bin/env python3", "#!/usr/bin/python3")
     with open("mini-system-monitor", "w") as writer:
         writer.write(script_file_content)
@@ -46,8 +37,6 @@ if PREFIX == "/app":
     data_files = [
         ("/app/share/applications/", ["io.github.hakandundar34coding.mini-system-monitor.desktop"]),
         ("/app/share/icons/hicolor/128x128/apps/", ["io.github.hakandundar34coding.mini-system-monitor.png"]),
-        ("/app/share/mini-system-monitor/", ["mini-system-monitor.png"]),
-        ("/app/share/mini-system-monitor/", ["Main.py"]),
         ("/app/share/appdata/", ["io.github.hakandundar34coding.mini-system-monitor.appdata.xml"]),
         ("/app/bin/", ["mini-system-monitor"])
     ]
@@ -56,22 +45,10 @@ if PREFIX == "/app":
 if PREFIX != "/app":
 
     os.chmod("io.github.hakandundar34coding.mini-system-monitor.desktop", 0o644)
-    os.chmod("Main.py", 0o644)
-    os.chmod("mini-system-monitor.png", 0o644)
-
-    shutil.copy2("mini-system-monitor.png", "io.github.hakandundar34coding.mini-system-monitor.png")
-
-    with open("io.github.hakandundar34coding.mini-system-monitor.desktop") as reader:
-        desktop_file_content = reader.read()
-    desktop_file_content = desktop_file_content.replace("Icon=mini-system-monitor", "Icon=io.github.hakandundar34coding.mini-system-monitor")
-    with open("io.github.hakandundar34coding.mini-system-monitor.desktop", "w") as writer:
-        writer.write(desktop_file_content)
 
     data_files = [
         ("/usr/share/applications/", ["io.github.hakandundar34coding.mini-system-monitor.desktop"]),
-        ("/usr/share/icons/128x128/scalable/apps/", ["io.github.hakandundar34coding.mini-system-monitor.png"]),
-        ("/usr/share/mini-system-monitor/", ["mini-system-monitor.png"]),
-        ("/usr/share/mini-system-monitor/", ["Main.py"]),
+        ("/usr/share/icons/hicolor/128x128/apps/", ["mini-system-monitor.png"]),
         ("/usr/bin/", ["mini-system-monitor"])
     ]
 
