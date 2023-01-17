@@ -26,10 +26,8 @@
   <releases>
     <release version="1.5.0" date="2023-01-15">
       <description>
-        <p>
-          Several improvements (GUI, code, project structure)
-          Fix: Process name of the application (Flatpak)
-        </p>
+        <p>Several improvements (GUI, code, project structure)</p>
+        <p>Fix: Process name of the application (Flatpak)</p>
       </description>
     </release>
     <release version="1.4.0" date="2022-12-29">
