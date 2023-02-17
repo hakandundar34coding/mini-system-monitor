@@ -71,12 +71,6 @@ class Application:
         self.graphics_label = tk.Label(self.main_window)
         self.graphics_label.grid(row=1, column=0, sticky="nsew")
 
-        # Surface (for showing Cairo context)
-        window_size = self.remember_window_size.split("x")
-        self.surface1 = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(window_size[0]), int(window_size[1]))
-        # Cairo Context (for drawing graphics)
-        self.context1 = cairo.Context(self.surface1)
-
 
     def about_window_gui(self):
 
@@ -342,12 +336,8 @@ class Application:
 
     def performance_graph_draw_func(self):
 
-        # Get widgets.
-        widget = self.graphics_label
-        ctx = self.context1
-        surface1 = self.surface1
-
         # Get drawingarea size.
+        widget = self.graphics_label
         widget.update()
         chart_width = widget.winfo_width()
         chart_height = widget.winfo_height()
