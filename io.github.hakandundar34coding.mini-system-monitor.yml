@@ -69,14 +69,16 @@ modules:
 
   # For drawing Cairo graphics
   - name: pycairo
-    buildsystem: simple
-    build-commands:
-      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
-        --prefix=${FLATPAK_DEST} "pycairo>=1.20.1" --no-build-isolation
+    buildsystem: meson
     sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/bc/3f/64e6e066d163fbcf13213f9eeda0fc83376243335ea46a66cefd70d62e8f/pycairo-1.20.1.tar.gz
-        sha256: 1ee72b035b21a475e1ed648e26541b04e5d7e753d75ca79de8c583b25785531b
+      - type: archive
+        url: https://github.com/pygobject/pycairo/archive/v1.23.0/pycairo-v1.23.0.tar.gz
+        sha256: caf1bdbae0d6e091e0b39a652574cf4ad610655f09da81b8a2e68f6fd3fa3147
+        x-checker-data:
+          type: anitya
+          project-id: 13166
+          stable-only: true
+          url-template: https://github.com/pygobject/pycairo/archive/v$version/pycairo-v$version.tar.gz
 
   # For showing images on the GUI
   - name: Pillow
@@ -89,7 +91,7 @@ modules:
         url: https://files.pythonhosted.org/packages/bc/07/830784e061fb94d67649f3e438ff63cfb902dec6d48ac75aeaaac7c7c30e/Pillow-9.4.0.tar.gz
         sha256: a1c2d7780448eb93fbcc3789bf3916aa5720d942e37945f4056680317f1cd23e
 
-
+  # For installing Mini System Monitor 
   - name: mini-system-monitor
     buildsystem: simple
     build-commands:
@@ -97,5 +99,5 @@ modules:
     sources:
       - type: git
         url: https://github.com/hakandundar34coding/mini-system-monitor.git
-        commit: 7645e07bf1a0bd4ea559278e6f12862a36c6baf2
+        commit: 2de6736adf93c1d961f608a728600ce69776b5d8
 
