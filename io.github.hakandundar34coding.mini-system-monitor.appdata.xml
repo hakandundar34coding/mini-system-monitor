@@ -24,6 +24,12 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.6.0" date="2023-02-23">
+      <description>
+        <p>Updated dependency versions</p>
+        <p>Minor improvements</p>
+      </description>
+    </release>
     <release version="1.5.0" date="2023-01-15">
       <description>
         <p>Several improvements (GUI, code, project structure)</p>

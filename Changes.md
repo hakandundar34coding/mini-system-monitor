@@ -1,5 +1,9 @@
 # Mini System Monitor
 
+### v1.6.0 (23.02.2023)
+  * Updated dependency versions
+  * Minor improvements
+
 ### v1.5.0 (15.01.2023)
   * Several improvements (GUI, code, project structure)
   * Fix: Process name of the application (Flatpak)
