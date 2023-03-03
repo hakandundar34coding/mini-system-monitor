@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
 import tkinter as tk
 import cairo
@@ -25,7 +25,7 @@ class Application:
     def config_default(self):
 
         self.update_interval = 0.75
-        self.remember_window_size = "530x420"
+        self.remember_window_size = "490x380"
         self.chart_line_color_cpu_percent = [0.29, 0.78, 0.0, 1.0]
         self.performance_cpu_usage_percent_precision = 0
         self.chart_line_color_memory_percent = [0.27, 0.49, 1.0, 1.0]
@@ -51,12 +51,13 @@ class Application:
         # Disable window resizing in x and y directions.
         self.main_window.resizable(False, False)
         self.main_window.title("Mini System Monitor")
+        image_name = "/io.github.hakandundar34coding.mini-system-monitor.png"
         if os.getenv('FLATPAK_ID') == None:
-            image_path = "/usr/share/icons/hicolor/128x128/apps" + "/mini-system-monitor.png"
+            image_path = "/usr/share/icons/hicolor/128x128/apps" + image_name
             if os.path.isfile(image_path) == False:
-                image_path = os.path.dirname(os.path.realpath(__file__)) + "/mini-system-monitor.png"
+                image_path = os.path.dirname(os.path.realpath(__file__)) + image_name
         else:
-            image_path = "/app/share/icons/hicolor/128x128/apps" + "/io.github.hakandundar34coding.mini-system-monitor.png"
+            image_path = "/app/share/icons/hicolor/128x128/apps" + image_name
         self.application_icon = tk.PhotoImage(file=image_path)
         # "True" is used in order to use same window icon for other windows of the application.
         self.main_window.iconphoto(True, self.application_icon)
@@ -382,7 +383,7 @@ class Application:
 
 
         # Define dimensions, locations, etc. to use them for scalable graphics.
-        gauge_outer_radius = frame_height * 0.43
+        gauge_outer_radius = frame_height * 0.45
         gauge_circular_center_x = chart_width / 2 - gauge_outer_radius * 0.48
         gauge_inner_radius = gauge_outer_radius * 0.57
         background_upper_lower_band_height = chart_height * 0.1
@@ -399,7 +400,7 @@ class Application:
         gauge_indicator_text_radius = gauge_outer_radius * 0.73
         gauge_indicator_text_correction = gauge_outer_radius * 0.047
         gauge_indicator_text_move = gauge_outer_radius * 0.027
-        gauge_indicator_text_size = gauge_outer_radius * 0.091
+        gauge_indicator_text_size = gauge_outer_radius * 0.0935
         gauge_indicator_text_size_smaller = gauge_indicator_text_size * 0.78
         gauge_cpu_ram_label_text_move = gauge_outer_radius * 0.266
         gauge_cpu_ram_label_text_margin = gauge_outer_radius * 0.07
@@ -408,9 +409,9 @@ class Application:
         gauge_cpu_ram_usage_text_move = gauge_outer_radius * 0.026
         gauge_percentage_label_text_below_cpu_ram_move = gauge_outer_radius * 0.074
         gauge_percentage_label_text_below_cpu_ram_size = gauge_outer_radius * 0.08
-        gauge_processes_swap_label_text_size = gauge_indicator_text_size * 0.88
+        gauge_processes_swap_label_text_size = gauge_indicator_text_size * 0.90
         gauge_processes_swap_label_text_move = gauge_outer_radius * 0.22
-        gauge_processes_swap_usage_text_size = gauge_cpu_ram_usage_text_size * 0.45
+        gauge_processes_swap_usage_text_size = gauge_cpu_ram_usage_text_size * 0.47
         gauge_processes_swap_usage_text_move = gauge_outer_radius * 0.34
         gauge_processes_swap_usage_text_shadow_move = gauge_cpu_ram_usage_text_shadow_move * 0.5
         gauge_separator_line_vertical_center_length = gauge_outer_radius * 0.94
@@ -424,7 +425,7 @@ class Application:
         gauge_right_upper_lower_edge_move_horizontal = gauge_right_outer_radius * 0.027
         gauge_separator_line_horizontal_start = gauge_outer_radius * 0.23
         gauge_separator_line_horizontal_length = gauge_outer_radius * 0.6
-        gauge_disk_network_label_text_size = gauge_indicator_text_size * 0.88
+        gauge_disk_network_label_text_size = gauge_indicator_text_size * 0.92
         gauge_disk_read_speed_label_text_move_x = gauge_outer_radius * 0.09
         gauge_disk_read_speed_label_text_move_y = gauge_outer_radius * 0.5
         gauge_disk_write_speed_label_text_move_x = gauge_outer_radius * 0.21
@@ -433,7 +434,7 @@ class Application:
         gauge_network_download_speed_label_text_move_y = gauge_outer_radius * 0.15
         gauge_network_upload_speed_label_text_move_x = gauge_outer_radius * 0.09
         gauge_network_upload_speed_label_text_move_y = gauge_outer_radius * 0.43
-        gauge_disk_network_usage_text_size = gauge_cpu_ram_usage_text_size * 0.4
+        gauge_disk_network_usage_text_size = gauge_cpu_ram_usage_text_size * 0.42
         gauge_disk_network_usage_text_shadow_move = gauge_outer_radius * 0.009
         gauge_disk_network_usage_text_move_y = gauge_outer_radius * 0.11
 
@@ -1213,7 +1214,7 @@ class Application:
         selected_network_card = self.network_card_list[self.selected_network_card_number]
         selected_network_card_text = "Network Card: " + selected_network_card
         ctx.set_font_size(gauge_disk_network_label_text_size)
-        ctx.move_to(frame_width - 160, frame_height - 1)
+        ctx.move_to(frame_width - 160, frame_height - 4)
         ctx.set_source_rgba(188/255, 191/255, 193/255, 1.0)
         ctx.show_text(selected_network_card_text)
 

@@ -1,7 +1,7 @@
 # Mini System Monitor
 
 <p align="center">
-    <img src="https://github.com/hakandundar34coding/mini-system-monitor/blob/master/mini-system-monitor.png" alt="image" width="100">
+    <img src="https://github.com/hakandundar34coding/mini-system-monitor/blob/master/io.github.hakandundar34coding.mini-system-monitor.png" alt="image" width="100">
 </p>
 
 <p align="center">
@@ -37,7 +37,7 @@
 
 ### Features:
 - Monitoring CPU, RAM, Disk, Network usage
-- Uses less than 40 MiB RAM
+- About 40 MiB RAM consumption
 - Free and open source
 
 
