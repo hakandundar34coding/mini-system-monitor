@@ -3,5 +3,5 @@ Name=Mini System Monitor
 Exec=mini-system-monitor
 Icon=io.github.hakandundar34coding.mini-system-monitor.png
 Type=Application
-Categories=System;
+Categories=System;Utility;
 
