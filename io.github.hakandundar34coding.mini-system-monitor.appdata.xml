@@ -24,6 +24,12 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.7.0" date="2023-03-29">
+      <description>
+        <p>Changes for smaller window</p>
+        <p>Build file simplifications</p>
+      </description>
+    </release>
     <release version="1.6.0" date="2023-02-23">
       <description>
         <p>Updated dependency versions</p>

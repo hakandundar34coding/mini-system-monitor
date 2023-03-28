@@ -1,5 +1,9 @@
 # Mini System Monitor
 
+### v1.7.0 (29.03.2023)
+  * Changes for smaller window
+  * Build file simplifications
+
 ### v1.6.0 (23.02.2023)
   * Updated dependency versions
   * Minor improvements
