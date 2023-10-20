@@ -1,5 +1,8 @@
 # Mini System Monitor
 
+### v1.7.1 (20.10.2023)
+  * End of support announcement on about dialog
+
 ### v1.7.0 (29.03.2023)
   * Changes for smaller window
   * Build file simplifications

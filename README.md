@@ -12,6 +12,13 @@
 
 
 <p align="center">
+    <strong>
+        *** Announcement (20.10.2023): End of support for Mini System Monitor ***
+    </strong>
+</p>
+
+
+<p align="center">
 <a href="https://flathub.org/apps/details/io.github.hakandundar34coding.mini-system-monitor"><img alt="Platform (GNU/Linux)" src="https://img.shields.io/badge/platform-GNU/Linux-blue.svg"/></a>
 <a href="https://github.com/hakandundar34coding/mini-system-monitor/tags"><img alt="GitHub tag (latest by date)" src="https://img.shields.io/github/v/tag/hakandundar34coding/mini-system-monitor"></a>
 <a href="https://flathub.org/apps/details/io.github.hakandundar34coding.mini-system-monitor"><img alt="Flathub" src="https://img.shields.io/flathub/downloads/io.github.hakandundar34coding.mini-system-monitor"></a>

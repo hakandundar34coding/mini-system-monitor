@@ -11,6 +11,7 @@
   <url type="homepage">https://github.com/hakandundar34coding/mini-system-monitor</url>
   <description>
     <p>Mini version of 'System Monitoring Center'</p>
+    <p>*** Announcement (20.10.2023): End of support for Mini System Monitor ***</p>
     <p>Features:</p>
     <ul>
       <li>Monitoring CPU, RAM, Disk, Network usage</li>
@@ -24,6 +25,11 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.7.1" date="2023-10-20">
+      <description>
+        <p>End of support announcement on about dialog</p>
+      </description>
+    </release>
     <release version="1.7.0" date="2023-03-29">
       <description>
         <p>Changes for smaller window</p>
