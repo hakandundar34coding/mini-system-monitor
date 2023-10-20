@@ -8,7 +8,7 @@ import os
 import time
 
 
-SOFTWARE_VERSION = "1.7.0"
+SOFTWARE_VERSION = "1.7.1"
 
 
 class Application:
@@ -128,17 +128,21 @@ class Application:
         label_font.configure(underline = True)
         web_page_label.configure(font=label_font)
 
+        # Label (End of support announcement)
+        end_of_support_announcement_label = tk.Label(about_window, text="*** Announcement (20.10.2023):\nEnd of support for Mini System Monitor ***")
+        end_of_support_announcement_label.grid(row=5, column=0, sticky="ns", padx=1, pady=0)
+
         # Label (copyright)
         copyright_label = tk.Label(about_window, text="© 2023 Hakan Dündar")
-        copyright_label.grid(row=5, column=0, sticky="ns", padx=0, pady=4)
+        copyright_label.grid(row=6, column=0, sticky="ns", padx=0, pady=4)
 
         # Label (license)
         license_label = tk.Label(about_window, text="This program comes with absolutely no warranty.\nSee the GNU General Public License, version 3 or later for details.")
-        license_label.grid(row=6, column=0, sticky="ns", padx=1, pady=0)
+        license_label.grid(row=7, column=0, sticky="ns", padx=1, pady=0)
 
         # Label (license link)
         license_link_label = tk.Label(about_window, text="GPLv3", fg="blue", cursor="hand2")
-        license_link_label.grid(row=7, column=0, sticky="ns")
+        license_link_label.grid(row=8, column=0, sticky="ns")
         license_link_label.bind("<Button-1>", lambda e:webbrowser.open_new("https://www.gnu.org/licenses/gpl-3.0.html"))
         label_font = tkFont.Font(license_link_label, license_link_label.cget("font"))
         label_font.configure(underline = True)
